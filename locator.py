@@ -5,11 +5,14 @@ import vehicle
 import numpy as np
 import typing
 
+import logger
+
+
 
 def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle) -> typing.Tuple[bool, int, int]:
     # print(map)
     for y in range(history.shape[0]):
-        print(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]))
+        logger.debug(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]))
 
     possible_end_loc = np.equal(m, history[0, 1])
     possible_loc = np.zeros(m.shape, dtype=bool)
@@ -22,12 +25,12 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle) -> typing.Tup
 
             # If end location is possible
             if possible_end_loc[y, x]:
-                print("Checking last location (x, y):", x, y)
+                logger.debug("Checking last location (x, y):", x, y)
 
                 # Debug
                 if x == end_x and y == end_y:
-                    print("----")
-                    print("Checking the correct location")
+                    logger.debug("----")
+                    logger.debug("Checking the correct location")
 
                 # Iterate orientations
                 for start_direction in range(0, 4):
@@ -55,11 +58,11 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle) -> typing.Tup
                         check_y -= dy
 
                         if not (0 <= check_x < m.shape[1] and 0 <= check_y < m.shape[0]):
-                            print("Locator went outside the map")
+                            logger.debug("Locator went outside the map")
                             failed = True
                             break
                         elif m[check_y, check_x] != history[hist_ind, 1]:
-                            print(
+                            logger.debug(
                                 "History color",
                                 hist_ind,
                                 "of",
@@ -76,13 +79,13 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle) -> typing.Tup
                     if not failed:
                         possible_loc[y, x] = True
 
-    print(possible_loc)
+    logger.debug(possible_loc)
     possible_y, possible_x = possible_loc.nonzero()
 
     if possible_y.size == 0:
-        print("No suitable places found")
+        logger.debug("No suitable places found")
     if possible_y.size == 1 and possible_x.size == 1:
-        print("Found location", possible_x[0], possible_y[0])
+        logger.debug("Found location", possible_x[0], possible_y[0])
         return True, possible_x[0], possible_y[0]
     else:
         return False, 0, 0

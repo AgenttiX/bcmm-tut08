@@ -6,6 +6,8 @@ import enum
 import numpy as np
 import typing
 
+import logger
+
 
 class Vehicle:
     __max_history = 10
@@ -18,7 +20,7 @@ class Vehicle:
         self.__direction = np.random.randint(low=0, high=3)
         self.__start_direction = self.__direction
 
-        print("Starting at direction", direction.Direction(self.__direction))
+        logger.info("Starting at direction", direction.Direction(self.__direction))
 
         self.__history = collections.deque(maxlen=self.__max_history)
 
@@ -98,3 +100,15 @@ class Vehicle:
             rel_dir = (self.__direction - self.__start_direction) % 4
             self.__history.appendleft((rel_dir, self.color()))
             # print("Moving", direction.Direction(self.__direction), direction.RelativeDirection(rel_dir))
+    
+    def move_unbound(self):
+        dir = np.random.randint(low=0, high=3)
+        self.__direction = dir
+        
+        dx, dy = direction.Direction(dir).xy()
+        
+        self.__x = (self.__x+dx) % self.__map.shape[0] # modulus works with negative numbers -1%10 = 9
+        self.__y = (self.__y+dy) % self.__map.shape[1]
+
+        rel_dir = (self.__direction - self.__start_direction) % 4
+        self.__history.appendleft((rel_dir, self.color()))
