@@ -24,6 +24,9 @@ class Vehicle:
 
         self.__history.appendleft((0, self.color()))
 
+    def start_direction(self):
+        return self.__start_direction
+
     def location(self) -> typing.Tuple[int, int, int]:
         return self.__x, self.__y, self.__direction
 

@@ -25,7 +25,6 @@ class LocatorPlot:
     def plot_vehicle(self):
         location = self.__vehicle.location()
         arrow_dir = direction.Direction(location[2]).xy()
-        print(location[2], arrow_dir)
         plt.arrow(
             location[0]-arrow_dir[0]*0.2,
             location[1]-arrow_dir[1]*0.2,

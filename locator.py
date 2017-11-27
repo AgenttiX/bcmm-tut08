@@ -8,7 +8,8 @@ import typing
 
 def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle) -> typing.Tuple[bool, int, int]:
     # print(map)
-    print(history)
+    for y in range(history.shape[0]):
+        print(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]))
 
     possible_end_loc = np.equal(m, history[0, 1])
     possible_loc = np.zeros(m.shape, dtype=bool)
@@ -30,6 +31,10 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle) -> typing.Tup
 
                 # Iterate orientations
                 for start_direction in range(0, 4):
+                    print("Checking with start direction", direction.Direction(start_direction))
+
+                    if start_direction == v.start_direction():
+                        print("Checking correct start direction")
 
                     check_x = x
                     check_y = y
@@ -37,8 +42,14 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle) -> typing.Tup
 
                     # Iterate history
                     for hist_ind in range(1, history.shape[0]):
+                        relative_dir = direction.RelativeDirection(history[hist_ind, 0])
+                        abs_dir = direction.Direction((relative_dir + start_direction) % 4)
 
-                        abs_dir = direction.Direction((start_direction + history[hist_ind, 0]) % 4)
+                        print("Converting relative direction",
+                              relative_dir,
+                              "to",
+                              abs_dir)
+
                         dx, dy = abs_dir.xy()
                         check_x -= dx
                         check_y -= dy
@@ -47,8 +58,7 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle) -> typing.Tup
                             print("Locator went outside the map")
                             failed = True
                             break
-
-                        if m[check_y, check_x] != history[hist_ind, 1]:
+                        elif m[check_y, check_x] != history[hist_ind, 1]:
                             print(
                                 "History color",
                                 hist_ind,
@@ -60,6 +70,8 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle) -> typing.Tup
                             )
                             failed = True
                             break
+
+                        print("Color match", check_x, check_y)
 
                     if not failed:
                         possible_loc[y, x] = True
