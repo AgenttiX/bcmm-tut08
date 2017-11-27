@@ -4,6 +4,8 @@ import vehicle
 import matplotlib.colors
 import matplotlib.pyplot as plt
 import numpy as np
+import logger
+
 
 
 class LocatorPlot:
@@ -25,14 +27,14 @@ class LocatorPlot:
     def plot_vehicle(self):
         location = self.__vehicle.location()
         arrow_dir = direction.Direction(location[2]).xy()
-        print(location[2], arrow_dir)
+        logger.debug(location[2], arrow_dir)
         plt.arrow(
-            location[0]-arrow_dir[0]*0.2,
-            location[1]-arrow_dir[1]*0.2,
-            arrow_dir[0]*0.01,
-            arrow_dir[1]*0.01,
-            head_width=0.4,
-            head_length=0.4
+            location[0]-arrow_dir[0]*0.7,
+            location[1]-arrow_dir[1]*0.7,
+            arrow_dir[0]*0.2,
+            arrow_dir[1]*0.2,
+            head_width=0.3,
+            head_length=0.3
         )
 
     def show(self):

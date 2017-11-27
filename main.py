@@ -4,6 +4,7 @@ import mapgrid
 import plotter
 import vehicle
 
+import logger; logger.set_level("DEBUG") # "DEBUG", "INFO" or "WARNING"
 
 height = 10
 width = 10
@@ -15,15 +16,21 @@ plot = plotter.LocatorPlot(v)
 plot.plot_map()
 plot.plot_vehicle()
 
-print("Start location:", v.location())
-print("Start color:", v.color())
+logger.info("Start location:", str(v.location()))
+logger.info("Start color:", v.color())
 
 for i in range(5):
-    v.move()
+    v.move_unbound()
     plot.plot_vehicle()
 
-locator.locate(v.map(), v.history(), v)
+found, x, y = locator.locate(v.map(), v.history(), v)
 
-print("End location:", v.location())
-print("End color:", v.color())
+logger.info("End location:", v.location())
+logger.info("End color:", v.color())
+if found:
+    logger.info("Found on location", x, y)
+else:
+    logger.warning("Location not found!")
+    
+
 plot.show()
