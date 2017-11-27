@@ -24,7 +24,7 @@ class Vehicle:
 
         self.__history = collections.deque(maxlen=self.__max_history)
 
-        self.__history.appendleft((0, self.color()))
+        self.__history.append((0, self.color()))
 
     def start_direction(self):
         return self.__start_direction
@@ -98,7 +98,7 @@ class Vehicle:
 
         if moved_here:
             rel_dir = (self.__direction - self.__start_direction) % 4
-            self.__history.appendleft((rel_dir, self.color()))
+            self.__history.append((rel_dir, self.color()))
             # print("Moving", direction.Direction(self.__direction), direction.RelativeDirection(rel_dir))
     
     def move_unbound(self):
@@ -111,4 +111,4 @@ class Vehicle:
         self.__y = (self.__y+dy) % self.__map.shape[1]
 
         rel_dir = (self.__direction - self.__start_direction) % 4
-        self.__history.appendleft((rel_dir, self.color()))
+        self.__history.append((rel_dir, self.color()))
