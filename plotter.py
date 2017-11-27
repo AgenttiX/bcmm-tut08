@@ -14,7 +14,8 @@ class LocatorPlot:
 
     __colormap = matplotlib.colors.from_levels_and_colors(
         [-0.5, 0.5, 1.5, 2.5, 3.5],
-        ["w", "r", "g", "b"]
+        [(1, 1, 1), (0.9765, 0, 0), (0, 0.9686, 0), (0, 0, 0.9765)]
+        # ["w", "r", "g", "b"]
     )[0]
 
     def __init__(self, vehicle):
