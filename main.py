@@ -3,9 +3,10 @@ import locator
 import mapgrid
 import plotter
 import vehicle
+import logger; logger.set_level("INFO") # "DEBUG", "INFO", "WARNING", "ERROR"
+import montecarlo
 
-import logger; logger.set_level("DEBUG") # "DEBUG", "INFO" or "WARNING"
-
+"""
 height = 10
 width = 10
 
@@ -30,10 +31,27 @@ found, x, y = locator.locate(v.map(), v.history())
 
 logger.info("End location:", v.location())
 logger.info("End color:", v.color())
-if found:
+if found==0:
     logger.info("Found on location", x, y)
 else:
     logger.warning("Location not found!")
+"""
+
+# This is temporary (till saturday)
+montecarlo.run(gridsize=10, steps=6, MC_iterations=100)
+montecarlo.run(gridsize=20, steps=6, MC_iterations=100)
+montecarlo.run(gridsize=30, steps=6, MC_iterations=100)
+montecarlo.run(gridsize=40, steps=6, MC_iterations=100)
+montecarlo.run(gridsize=50, steps=6, MC_iterations=100)
+
+montecarlo.run(gridsize=50, steps=3, MC_iterations=100)
+montecarlo.run(gridsize=50, steps=4, MC_iterations=100)
+montecarlo.run(gridsize=50, steps=5, MC_iterations=100)
+montecarlo.run(gridsize=50, steps=6, MC_iterations=100)
+montecarlo.run(gridsize=50, steps=7, MC_iterations=100)
 
 
-plot.show()
+
+
+
+#plot.show()

@@ -52,3 +52,6 @@ def info(*args):
     
 def warning(*args):
     logging.warning(', '.join(map(str,args)))
+    
+def error(*args):
+    logging.error(', '.join(map(str,args)))
