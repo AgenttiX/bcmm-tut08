@@ -7,6 +7,7 @@ import numpy as np
 import typing
 
 import logger
+log = logger.getLogger(__name__, level="DEBUG", disabled=True)
 
 
 class Vehicle:
@@ -20,7 +21,7 @@ class Vehicle:
         self.__direction = np.random.randint(low=0, high=3)
         self.__start_direction = self.__direction
 
-        logger.info("Starting at direction", direction.Direction(self.__direction))
+        log.info("Starting at direction", direction.Direction(self.__direction))
 
         self.__history = collections.deque(maxlen=self.__max_history)
 

@@ -6,6 +6,8 @@ import numpy as np
 import typing
 
 import logger
+log = logger.getLogger(__name__, level="DEBUG", disabled=True)
+
 
 
 def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typing.Tuple[int, int, int]:
@@ -16,7 +18,7 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
 
     # print(map)
     for y in range(history.shape[0]):
-        logger.debug(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]))
+        log.debug(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]))
 
     possible_end_loc = np.equal(m, history[0, 1])
     possible_loc = np.zeros(m.shape, dtype=bool)
@@ -28,19 +30,19 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
             # If end location is possible
             if possible_end_loc[y, x]:
                 if debug:
-                    logger.debug("Checking last location (x, y):", x, y)
+                    log.debug("Checking last location (x, y):", x, y)
 
                     if x == end_x and y == end_y:
-                        logger.debug("----")
-                        logger.debug("Checking the correct location")
+                        log.debug("----")
+                        log.debug("Checking the correct location")
 
                 # Iterate orientations
                 for start_direction in range(0, 4):
                     if debug:
-                        logger.debug("Checking with start direction", direction.Direction(start_direction))
+                        log.debug("Checking with start direction", direction.Direction(start_direction))
 
                         if start_direction == v.start_direction():
-                            logger.debug("Checking correct start direction")
+                            log.debug("Checking correct start direction")
 
                     check_x = x
                     check_y = y
@@ -52,7 +54,7 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
                         abs_dir = direction.Direction((relative_dir + start_direction) % 4)
 
                         if debug:
-                            logger.debug("Converting relative direction",
+                            log.debug("Converting relative direction",
                                   relative_dir,
                                   "to",
                                   abs_dir)
@@ -66,14 +68,14 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
                         # No longer a problem since the vehicle is allowed to go outside the map
                         """
                         if not (0 <= check_x < m.shape[1] and 0 <= check_y < m.shape[0]):
-                            logger.debug("Locator went outside the map")
+                            log.debug("Locator went outside the map")
                             failed = True
                             break
                         """
 
                         if m[check_y, check_x] != history[hist_ind, 1]:
                             if debug:
-                                logger.debug(
+                                log.debug(
                                     "History color",
                                     hist_ind,
                                     color.Color(history[hist_ind, 1]),
@@ -87,22 +89,22 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
                             break
 
                         if debug:
-                            logger.debug("Color match", check_x, check_y)
+                            log.debug("Color match", check_x, check_y)
 
                     if not failed:
-                        logger.debug("Found possible loc", x, y)
+                        log.debug("Found possible loc", x, y)
                         possible_loc[y, x] = True
 
-    logger.debug("Locator results:\n", possible_loc)
+    log.debug("Locator results:\n", possible_loc)
     possible_y, possible_x = possible_loc.nonzero()
     
     
     num_matches = possible_y.size
     
     if num_matches == 0:
-        logger.debug("No suitable places found")
+        log.debug("No suitable places found")
     if num_matches == 1 and possible_x.size == 1:
-        logger.debug("Found location", possible_x[0], possible_y[0])
+        log.debug("Found location", possible_x[0], possible_y[0])
         return num_matches, possible_x[0], possible_y[0]
     else:
         return num_matches, -9999, -9999

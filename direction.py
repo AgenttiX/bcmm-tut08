@@ -1,5 +1,6 @@
 import enum
 import logger
+log = logger.getLogger(__name__, level="DEBUG", disabled=True)
 
 
 @enum.unique
@@ -33,6 +34,6 @@ class RelativeDirection(enum.IntEnum):
 if __name__ == "__main__":
     test = Direction(1)
 
-    logger.debug("Reference:", test)
+    log.debug("Reference:", test)
     for i in range(4):
         print(Direction(i), RelativeDirection((i - test) % 4))
