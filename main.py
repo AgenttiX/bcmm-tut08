@@ -35,7 +35,7 @@ def plot_single_run():
 
     log.info("End location:", v.location())
     log.info("End color:", v.color())
-    if found==0:
+    if found == 1:
         log.info("Found on location", x, y)
     else:
         log.warning("Location not found!")

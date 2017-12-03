@@ -93,18 +93,19 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
 
                     if not failed:
                         log.debug("Found possible loc", x, y)
-                        possible_loc[y, x] = True
+                        possible_loc[check_y, check_x] = True
 
     log.debug("Locator results:\n", possible_loc)
     possible_y, possible_x = possible_loc.nonzero()
-    
-    
+
     num_matches = possible_y.size
     
     if num_matches == 0:
         log.debug("No suitable places found")
+        return num_matches, -9999, -9999
     if num_matches == 1 and possible_x.size == 1:
         log.debug("Found location", possible_x[0], possible_y[0])
         return num_matches, possible_x[0], possible_y[0]
     else:
+        log.debug("Multiple possible locations found")
         return num_matches, -9999, -9999
