@@ -40,7 +40,7 @@ def plot_single_run():
     else:
         log.warning("Location not found!")
     
-    #plot.show()
+    plot.show()
 
 
 def main():
@@ -52,6 +52,6 @@ def main():
         
     plt.show()
     
-main()
-
+# main()
+plot_single_run()
 

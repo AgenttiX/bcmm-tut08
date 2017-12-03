@@ -30,6 +30,8 @@ class RelativeDirection(enum.IntEnum):
     LEFT = 1
     BACK = 2
 
+    def reverse(self):
+        return RelativeDirection((self + 2) % 4)
 
 if __name__ == "__main__":
     test = Direction(1)
@@ -37,3 +39,7 @@ if __name__ == "__main__":
     log.debug("Reference:", test)
     for i in range(4):
         print(Direction(i), RelativeDirection((i - test) % 4))
+
+    log.debug("Reversing")
+    for i in range(4):
+        print(RelativeDirection(i), RelativeDirection(i).reverse())

@@ -101,7 +101,7 @@ class Vehicle:
             rel_dir = (self.__direction - self.__start_direction) % 4
             self.__history.append((rel_dir, self.color()))
             # print("Moving", direction.Direction(self.__direction), direction.RelativeDirection(rel_dir))
-    
+
     def move_unbound(self):
         dir = np.random.randint(low=0, high=3)
         self.__direction = dir

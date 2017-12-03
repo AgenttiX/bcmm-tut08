@@ -6,17 +6,18 @@ import numpy as np
 import typing
 
 import logger
-log = logger.getLogger(__name__, level="DEBUG", disabled=True)
-
+log = logger.getLogger(__name__, level="DEBUG", disabled=False)
 
 
 def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typing.Tuple[int, int, int]:
+    # Enable debug output if the vehicle is given
     debug = (v is not None)
 
     if debug:
         end_x, end_y, end_dir = v.location()
 
     # print(map)
+    log.debug("History:")
     for y in range(history.shape[0]):
         log.debug(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]))
 
@@ -34,7 +35,7 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
 
                     if x == end_x and y == end_y:
                         log.debug("----")
-                        log.debug("Checking the correct location")
+                        log.debug("Checking the correct location", x, y)
 
                 # Iterate orientations
                 for start_direction in range(0, 4):
@@ -50,14 +51,20 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
 
                     # Iterate history
                     for hist_ind in range(1, history.shape[0]):
+                        # history_dir = direction.RelativeDirection(history[hist_ind, 0])
+                        # relative_dir = history_dir.reverse()
                         relative_dir = direction.RelativeDirection(history[hist_ind, 0])
                         abs_dir = direction.Direction((relative_dir + start_direction) % 4)
 
                         if debug:
-                            log.debug("Converting relative direction",
-                                  relative_dir,
-                                  "to",
-                                  abs_dir)
+                            log.debug(
+                                "Converting history dir",
+                                hist_ind,
+                                ":",
+                                relative_dir,
+                                "to",
+                                abs_dir
+                            )
 
                         dx, dy = abs_dir.xy()
                         check_x -= dx
@@ -89,7 +96,7 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
                             break
 
                         if debug:
-                            log.debug("Color match", check_x, check_y)
+                            log.debug("Color match", color.Color(m[check_x, check_y]), check_x, check_y)
 
                     if not failed:
                         log.debug("Found possible loc", x, y)

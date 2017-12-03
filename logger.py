@@ -35,7 +35,7 @@ These are levels possible levels
 """
 
 
-class _Logger():
+class _Logger:
     def __init__(self, name):
         self._logger = logging.getLogger(name)
         
@@ -87,7 +87,7 @@ class _Logger():
         
         self._logger.setLevel(log_level) 
         
-        if colors==True:
+        if colors == True:
             OKBLUE = '\033[94m'
             OKGREEN = '\033[92m'
             WARNING = '\033[93m'
@@ -111,4 +111,3 @@ def getLogger(name, level="DEBUG", disabled=False, colors=False):
     log.getActualLogger().disabled = disabled
 
     return log
-    
