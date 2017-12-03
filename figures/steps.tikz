@@ -1,0 +1,75 @@
+% This file was created by matplotlib2tikz v0.6.14.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+
+\begin{axis}[
+xlabel={askelten lukumäärä},
+ylabel={P},
+xmin=2.65, xmax=10.35,
+ymin=0.876116665711735, ymax=0.912638099229979,
+tick align=outside,
+tick pos=left,
+x grid style={lightgray!92.026143790849673!black},
+y grid style={lightgray!92.026143790849673!black}
+]
+\path [draw=color0, semithick] (axis cs:3,0.880013230373669)
+--(axis cs:3,0.904186769626331);
+
+\path [draw=color0, semithick] (axis cs:4,0.881671632189307)
+--(axis cs:4,0.906728367810693);
+
+\path [draw=color0, semithick] (axis cs:5,0.8854)
+--(axis cs:5,0.9092);
+
+\path [draw=color0, semithick] (axis cs:6,0.878065559308063)
+--(axis cs:6,0.898134440691937);
+
+\path [draw=color0, semithick] (axis cs:7,0.877776730871655)
+--(axis cs:7,0.907023269128345);
+
+\path [draw=color0, semithick] (axis cs:8,0.878221965929942)
+--(axis cs:8,0.910978034070059);
+
+\path [draw=color0, semithick] (axis cs:9,0.8794)
+--(axis cs:9,0.8982);
+
+\path [draw=color0, semithick] (axis cs:10,0.885)
+--(axis cs:10,0.894);
+
+\addplot [semithick, color0, mark=-, mark size=5, mark options={solid}, only marks, forget plot]
+table {%
+3 0.880013230373669
+4 0.881671632189307
+5 0.8854
+6 0.878065559308063
+7 0.877776730871655
+8 0.878221965929942
+9 0.8794
+10 0.885
+};
+\addplot [semithick, color0, mark=-, mark size=5, mark options={solid}, only marks, forget plot]
+table {%
+3 0.904186769626331
+4 0.906728367810693
+5 0.9092
+6 0.898134440691937
+7 0.907023269128345
+8 0.910978034070059
+9 0.8982
+10 0.894
+};
+\addplot [semithick, color0, forget plot]
+table {%
+3 0.8921
+4 0.8942
+5 0.8973
+6 0.8881
+7 0.8924
+8 0.8946
+9 0.8888
+10 0.8895
+};
+\end{axis}
+
+\end{tikzpicture}

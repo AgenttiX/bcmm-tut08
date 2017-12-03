@@ -1,13 +1,13 @@
+import matplotlib.pyplot as plt
+
 import color
 import locator
 import mapgrid
 import plotter
 import vehicle
-
 import logger
-import montecarlo
-
 log = logger.getLogger(__name__, level="DEBUG", disabled=False)  # Root logger
+import montecarlo
 
 
 def plot_single_run():
@@ -40,13 +40,17 @@ def plot_single_run():
     else:
         log.warning("Location not found!")
     
-    plot.show()
+    #plot.show()
 
 
 def main():
     plot_single_run()
     
-    montecarlo.plot_curves_gridsizes(steps=10, iterations=1000, plot=True, use_stored_results=True)
+    montecarlo.plot_curves_gridsizes(steps=10, num_runs=10, iterations=200, use_stored_results=True)
+    
+    montecarlo.plot_curves_steps(gridsize=20, num_runs=10, iterations=1000, use_stored_results=True)
+        
+    plt.show()
     
 main()
 
