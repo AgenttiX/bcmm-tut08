@@ -1,10 +1,22 @@
-import direction
-import vehicle
-
 import matplotlib.colors
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import sys
+
+import direction
+import vehicle
 import logger
+log = logger.getLogger(__name__, level="DEBUG", disabled=False, colors=True)
+
+plt2tikZ_is_crappy = False
+if not plt2tikZ_is_crappy:
+    from matplotlib2tikz import save as latex_save
+else:
+    def latex_save(name):
+        plt.savefig(name)
+
+
 
 
 class LocatorPlot:
@@ -38,3 +50,214 @@ class LocatorPlot:
 
     def show(self):
         plt.show()
+        
+
+
+
+def block_print(): 
+    sys.stdout = open(os.devnull, 'w')
+
+
+def enable_print():
+    sys.stdout = sys.__stdout__
+
+def write_lines(filename, contains, insert_this):
+    """
+    Inserts text 'insert_this' in file 'filename' after the line that contains 'contains'
+    """
+    with open(filename, 'r') as file:
+        data = file.readlines()
+
+    for idx, line in enumerate(data):
+        if contains in line:
+            data.insert(idx+1, insert_this)
+            break
+
+    with open(filename, 'w') as file:
+        file.writelines( data )
+
+    
+def plot_gridsizes_error(gridsizes0, single_matches0, gridsizes1, single_matches1):
+    """
+    Plots for probabilities as function of gridsizes
+    
+    arguments
+        gridsizes0          -  vector
+        single_matches0     -  probability-matrix to find single match (no 0.001 error)
+        gridsizes1          -  vec
+        single_matches1     -  probability-matrix to find single match with 0.001 error. 
+                               Includes both correct and incorrect matches
+    """
+    # Matrix excepted values and errorbars
+    mean_mat0 = np.mean(single_matches0, axis=0)    # (no 0.001 error)
+    mean_mat1 = np.mean(single_matches1, axis=0)    # with 0.001 error
+    err_mat0 = np.std(single_matches0, axis=0)      # (no 0.001 error)
+    err_mat1 = np.std(single_matches1, axis=0)      # with 0.001 error
+    
+    # Excepted values and errorbars for probability-values of correctly found cases
+    mean_correct0 = mean_mat0[:,0]
+    mean_correct1 = mean_mat1[:,0]
+    err_correct0 = err_mat0[:,0]
+    err_correct1 = err_mat1[:,0]
+    
+    # Excepted values and errorbars for probability-values of incorrectly found cases
+    mean_incorrect1 = mean_mat1[:,1]
+    err_incorrect1 = err_mat1[:,1]
+    if (np.sum(mean_mat0[:,1]) > 0):# There should be no incorrect matches without the 0.001 error!
+        log.warning("Map locator has located wrong location! This message should not be printed.")
+    
+    mean_not_found1 = mean_mat1[:,2]
+    err_not_found1 = err_mat1[:,2]
+    if (np.sum(mean_mat0[:,2]) > 0):
+        log.warning("Map locator has not found location when it should have! This message should not be printed.")
+
+    
+    plt.figure("gridsizes oikea tulos")
+    label1 = "Löytyi, aina tarkka mittaus"
+    label2 = "Löytyi, mittausvirhe"
+    label3 = "Ei löytynyt, mittausvirhe"
+    plt.errorbar(gridsizes0, mean_correct0, yerr=err_correct0, capsize=5, label=label1)
+    plt.errorbar(gridsizes1, mean_correct1, yerr=err_correct1, capsize=5, label=label2)
+    plt.errorbar(gridsizes1, mean_not_found1, yerr=err_not_found1, capsize=5, label=label3)
+    plt.xlabel("kartan koko")
+    plt.ylabel("P")
+    plt.ylim([0.5,1])
+    #plt.legend()
+    
+    """
+    matplotlib2tikz is buggy and can not draw legends and errorbars at the same time.
+    To add legends by hand, add following lines at the end of block "\begin{axis}[...""
+    
+    , % notice to add a colon at the end of last line before ']'!
+    legend entries={{asdf},{asdf2}},
+    legend cell align={left},
+    legend style={draw=white!80.0!black}
+    ] % this
+    """
+    
+    
+    if not plt2tikZ_is_crappy:
+        block_print()
+        latex_save('figures/gridsizes.tikz')
+        enable_print()
+        
+        log.debug("Adding lines to file 'gridsizes.tikz' after 'begin{axis}['" + "\n")
+        
+        add_label = \
+        "," + "\n" +\
+        "legend entries={{" + label1 + "},{" + label2 + "},{" + label3 + "}},"+ "\n" +\
+        "legend cell align={right}," + "\n" +\
+        "legend style={draw=white!80.0!black}," + "\n" +\
+        "legend style={at={(0.97,1.03)},anchor=south east}" + "\n" +\
+        "]  % replace the ending bracket" + "\n" +\
+        "\\addlegendimage{no markers, color0}"+ "\n" +\
+        "\\addlegendimage{no markers, color1}"+ "\n" +\
+        "\\addlegendimage{no markers, color2}%" 
+        
+        write_lines('figures/gridsizes.tikz', "y grid style", add_label)
+
+    else:
+        latex_save('figures/gridsizes.pgf')
+        
+    plt.legend()
+    
+    plt.figure("gridsizes väärä tulos")
+    plt.errorbar(gridsizes1, mean_incorrect1, yerr=err_incorrect1, capsize=5)
+    plt.xlabel("kartan koko")
+    plt.ylabel("P")
+    
+    if not plt2tikZ_is_crappy:
+        block_print()
+        latex_save('figures/gridsizes_incorrect_result.tikz')
+        enable_print()
+    else:
+        latex_save('figures/gridsizes_incorrect_result.pgf')
+    
+def plot_steps_error(steps0, single_matches0, steps1, single_matches1):
+    """
+    Plots for probabilities as function of gridsizes
+    
+    arguments
+        steps0              -  
+        single_matches0     -  probability-matrix to find single match (no 0.001 error)
+        steps1              -
+        single_matches1     -  probability-matrix to find single match with 0.001 error. 
+                               Includes both correct and incorrect matches
+    """
+    # Matrix excepted values and errorbars
+    mean_mat0 = np.mean(single_matches0, axis=0)    # (no 0.001 error)
+    mean_mat1 = np.mean(single_matches1, axis=0)    # with 0.001 error
+    err_mat0 = np.std(single_matches0, axis=0)      # (no 0.001 error)
+    err_mat1 = np.std(single_matches1, axis=0)      # with 0.001 error
+    
+    # Excepted values and errorbars for probability-values of correctly found cases
+    mean_correct0 = mean_mat0[:,0]
+    mean_correct1 = mean_mat1[:,0]
+    err_correct0 = err_mat0[:,0]
+    err_correct1 = err_mat1[:,0]
+    
+    # Excepted values and errorbars for probability-values of incorrectly found cases
+    mean_incorrect1 = mean_mat1[:,1]
+    err_incorrect1 = err_mat1[:,1]
+    if (np.sum(mean_mat0[:,1]) > 0):# There should be no incorrect matches without the 0.001 error!
+        log.warning("Map locator has located wrong location! This message should not be printed.")
+    
+    mean_not_found1 = mean_mat1[:,2]
+    err_not_found1 = err_mat1[:,2]
+    if (np.sum(mean_mat0[:,2]) > 0):
+        log.warning("Map locator has not found location when it should have! This message should not be printed.")
+
+    
+    plt.figure("steps oikea tulos")
+    label1 = "Löytyi, aina tarkka mittaus"
+    label2 = "Löytyi, mittausvirhe"
+    label3 = "Ei löytynyt, mittausvirhe"
+    plt.errorbar(steps0, mean_correct0, yerr=err_correct0, capsize=5, label=label1)
+    plt.errorbar(steps1, mean_correct1, yerr=err_correct1, capsize=5, label=label2)
+    plt.errorbar(steps1, mean_not_found1, yerr=err_not_found1, capsize=5, label=label3)
+    plt.xlabel("askelten lukumäärä")
+    plt.ylabel("P")
+    plt.ylim([0,1])
+    #plt.legend()
+    
+    if not plt2tikZ_is_crappy:
+        block_print()
+        latex_save('figures/steps.tikz')
+        enable_print()
+        
+        log.debug("Adding lines to file 'steps.tikz' after 'begin{axis}['" + "\n")
+                 
+        add_label = \
+        "," + "\n" +\
+        "legend entries={{" + label1 + "},{" + label2 + "},{" + label3 + "}},"+ "\n" +\
+        "legend cell align={right}," + "\n" +\
+        "legend style={draw=white!80.0!black}," + "\n" +\
+        "legend style={at={(0.97,1.03)},anchor=south east}" + "\n" +\
+        "]  % replace the ending bracket" + "\n" +\
+        "\\addlegendimage{no markers, color0}"+ "\n" +\
+        "\\addlegendimage{no markers, color1}"+ "\n" +\
+        "\\addlegendimage{no markers, color2}%" 
+        
+        write_lines('figures/steps.tikz', "y grid style", add_label)
+                
+    else:
+        latex_save('figures/steps.pgf')
+    
+    plt.legend()
+    
+    plt.figure("steps väärä tulos")
+    plt.errorbar(steps1, mean_incorrect1, yerr=err_incorrect1, capsize=5)
+    plt.xlabel("askelten lukumäärä")
+    plt.ylabel("P")
+
+    if not plt2tikZ_is_crappy:
+        block_print()
+        latex_save('figures/steps_incorrect_result.tikz')
+        enable_print()
+        
+    else:
+        latex_save('figures/steps_incorrect_result.pgf')
+    
+
+
+

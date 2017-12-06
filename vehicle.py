@@ -61,6 +61,34 @@ class Vehicle:
             arr[i, 2] = snapshot[1]
         return arr
     """
+    
+    def history_error(self, iteration_for_seed=None) -> np.ndarray:
+        """
+        Get movement history that has measurement error in it. 
+        
+        This uses unique id of the vehicle-object as a seed for random generator, so it is
+        allowed to call this method more than once in a single lifetime.
+        
+        :return: numpy array of (direction, color)
+        """
+        l = len(self.__history)
+        arr = np.zeros(shape=(l, 2))
+        for i in range(l):
+            snapshot = self.__history[i]
+            arr[i, 0] = snapshot[0]
+            arr[i, 1] = snapshot[1]
+        
+        np.random.seed(np.mod(int(id(self)), 2**16)+iteration_for_seed) 
+        # seed can not be too large (memory address) :P
+        # id(object) gives only like two different values --> python uses same memory addresses for object in loop re-initialization
+        rnd_colors = np.random.randint(3, size=self.__max_history)+1 # Note error can not be same color (so therefore 1,2,3)
+        rnd_prob = (np.random.random(self.__max_history) < 0.001).astype(int) # vector [0,0,...0,1,0,..0]
+        np.random.seed(None)
+
+        # altered_history
+        arr[:, 1] = np.mod(arr[:, 1] + (rnd_colors*rnd_prob)[0 : l], 4)
+        
+        return arr
 
     def map(self) -> np.ndarray:
         return self.__map.copy()

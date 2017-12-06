@@ -1,0 +1,87 @@
+% This file was created by matplotlib2tikz v0.6.14.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+
+\begin{axis}[
+xlabel={askelten lukumäärä},
+ylabel={P},
+xmin=0.55, xmax=10.45,
+ymin=-0.000143508288624238, ymax=0.00154700739444233,
+tick align=outside,
+tick pos=left,
+x grid style={white!69.019607843137251!black},
+y grid style={white!69.019607843137251!black}
+]
+\path [draw=color0, semithick] (axis cs:1,0)
+--(axis cs:1,0);
+
+\path [draw=color0, semithick] (axis cs:2,0)
+--(axis cs:2,0);
+
+\path [draw=color0, semithick] (axis cs:3,-6.66666666666667e-05)
+--(axis cs:3,0.000133333333333333);
+
+\path [draw=color0, semithick] (axis cs:4,0.000347844667791649)
+--(axis cs:4,0.00125215533220835);
+
+\path [draw=color0, semithick] (axis cs:5,0.000367779015096808)
+--(axis cs:5,0.00136555431823653);
+
+\path [draw=color0, semithick] (axis cs:6,0.000442740070430622)
+--(axis cs:6,0.00102392659623605);
+
+\path [draw=color0, semithick] (axis cs:7,0.000196500894181907)
+--(axis cs:7,0.00147016577248476);
+
+\path [draw=color0, semithick] (axis cs:8,-2.11083193570266e-05)
+--(axis cs:8,0.000421108319357027);
+
+\path [draw=color0, semithick] (axis cs:9,-5.69401310833123e-05)
+--(axis cs:9,0.000390273464416646);
+
+\path [draw=color0, semithick] (axis cs:10,7.34013676289096e-05)
+--(axis cs:10,0.00072659863237109);
+
+\addplot [semithick, color0, mark=-, mark size=5, mark options={solid}, only marks, forget plot]
+table {%
+1 0
+2 0
+3 -6.66666666666667e-05
+4 0.000347844667791649
+5 0.000367779015096808
+6 0.000442740070430622
+7 0.000196500894181907
+8 -2.11083193570266e-05
+9 -5.69401310833123e-05
+10 7.34013676289096e-05
+};
+\addplot [semithick, color0, mark=-, mark size=5, mark options={solid}, only marks, forget plot]
+table {%
+1 0
+2 0
+3 0.000133333333333333
+4 0.00125215533220835
+5 0.00136555431823653
+6 0.00102392659623605
+7 0.00147016577248476
+8 0.000421108319357027
+9 0.000390273464416646
+10 0.00072659863237109
+};
+\addplot [semithick, color0, forget plot]
+table {%
+1 0
+2 0
+3 3.33333333333333e-05
+4 0.0008
+5 0.000866666666666667
+6 0.000733333333333333
+7 0.000833333333333333
+8 0.0002
+9 0.000166666666666667
+10 0.0004
+};
+\end{axis}
+
+\end{tikzpicture}

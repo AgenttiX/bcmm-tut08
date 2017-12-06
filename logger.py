@@ -32,6 +32,8 @@ These are levels possible levels
     INFO        20
     DEBUG       10
     NOTSET      0
+    
+    # Todo implement progressbar-function (I already have made that, but its somewhere in my files)
 """
 
 
@@ -88,16 +90,55 @@ class _Logger:
         self._logger.setLevel(log_level) 
         
         if colors == True:
-            OKBLUE = '\033[94m'
-            OKGREEN = '\033[92m'
-            WARNING = '\033[93m'
+            pass
+        
+        def decorate_emit(fn): # https://stackoverflow.com/questions/20706338/color-logging-using-logging-module-in-python
+        # add methods we need to the class
+            def new(*args):
+                levelno = args[0].levelno
+                lightgray = '\033[37m'
+                ENDC = '\033[0m'
+                
+                if(levelno >= logging.CRITICAL):
+                    lvl = "CRITICAL"
+                    color = '\033[91m\033[1m\033[4m' #FAIL (red) BOLD UNDERLINE
+                elif(levelno >= logging.ERROR):
+                    lvl = "ERROR"
+                    color = '\033[91m' #FAIL (red)
+                elif(levelno >= logging.WARNING):
+                    lvl = "WARNING"
+                    color = '\033[93m' # WARNING (yellow)
+                elif(levelno >= logging.INFO):
+                    lvl = "INFO"
+                    color = '\033[92m' # OKGREEN
+                elif(levelno >= logging.DEBUG):
+                    lvl = "DEBUG"
+                    color = '\033[94m' # OKBLUE # these colors are from Bldender scripts
+                else:
+                    lvl = "NOTSET"
+                    color = lightgray
+                
+                
+                # add colored *** in the beginning of the message
+                args[0].msg = color+lvl+":"+ENDC+" "+str(args[0].msg)
+
+                # new feature i like: bolder each args of message 
+                args[0].args = tuple('\x1b[1m' + arg + '\x1b[0m' for arg in args[0].args)
+                return fn(*args)
+            return new
+        
+
+        consoleHandler = logging.StreamHandler()
+
+        if colors == True:
+            lightgray = '\033[37m'
             ENDC = '\033[0m'
-            form_str = OKBLUE + '%(name)s %(levelname)s:' + ENDC + ' %(message)s'
+            form_str = lightgray + '%(name)s' + ENDC + ' %(message)s'
+            consoleHandler.emit = decorate_emit(consoleHandler.emit)
         else:
             form_str = '%(name)s %(levelname)s: %(message)s'
         
         formatter = logging.Formatter(form_str)
-        consoleHandler = logging.StreamHandler()
         
         consoleHandler.setLevel(log_level) # How does this differ from logger.setLevel()?
         consoleHandler.setFormatter(formatter)
