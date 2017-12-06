@@ -1,0 +1,235 @@
+% This file was created by matplotlib2tikz v0.6.14.
+\begin{tikzpicture}
+
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+
+\begin{axis}[
+xlabel={askelten lukumäärä},
+ylabel={P},
+xmin=0.55, xmax=10.45,
+ymin=0, ymax=1,
+tick align=outside,
+tick pos=left,
+x grid style={white!69.019607843137251!black},
+y grid style={white!69.019607843137251!black}
+,
+legend entries={{Löytyi, aina tarkka mittaus},{Löytyi, mittausvirhe},{Ei löytynyt, mittausvirhe}},
+legend cell align={right},
+legend style={draw=white!80.0!black},
+legend style={at={(0.97,1.03)},anchor=south east}
+]  % replace the ending bracket
+\addlegendimage{no markers, color0}
+\addlegendimage{no markers, color1}
+\addlegendimage{no markers, color2}%]
+\path [draw=color0, semithick] (axis cs:1,0)
+--(axis cs:1,0);
+
+\path [draw=color0, semithick] (axis cs:2,0)
+--(axis cs:2,0);
+
+\path [draw=color0, semithick] (axis cs:3,0.00143257614848183)
+--(axis cs:3,0.00290075718485151);
+
+\path [draw=color0, semithick] (axis cs:4,0.100311682414221)
+--(axis cs:4,0.108954984252446);
+
+\path [draw=color0, semithick] (axis cs:5,0.323782866196287)
+--(axis cs:5,0.342217133803713);
+
+\path [draw=color0, semithick] (axis cs:6,0.539787818450319)
+--(axis cs:6,0.550745514883014);
+
+\path [draw=color0, semithick] (axis cs:7,0.700002116615453)
+--(axis cs:7,0.720997883384547);
+
+\path [draw=color0, semithick] (axis cs:8,0.813049391115773)
+--(axis cs:8,0.829017275550893);
+
+\path [draw=color0, semithick] (axis cs:9,0.888015956935157)
+--(axis cs:9,0.898584043064843);
+
+\path [draw=color0, semithick] (axis cs:10,0.882902410828573)
+--(axis cs:10,0.89903092250476);
+
+\path [draw=color1, semithick] (axis cs:1,0)
+--(axis cs:1,0);
+
+\path [draw=color1, semithick] (axis cs:2,0)
+--(axis cs:2,0);
+
+\path [draw=color1, semithick] (axis cs:3,0.000866666666666667)
+--(axis cs:3,0.00326666666666667);
+
+\path [draw=color1, semithick] (axis cs:4,0.0972666666666667)
+--(axis cs:4,0.111133333333333);
+
+\path [draw=color1, semithick] (axis cs:5,0.315752321559721)
+--(axis cs:5,0.341714345106946);
+
+\path [draw=color1, semithick] (axis cs:6,0.537401304055848)
+--(axis cs:6,0.564665362610819);
+
+\path [draw=color1, semithick] (axis cs:7,0.692628704319444)
+--(axis cs:7,0.727437962347222);
+
+\path [draw=color1, semithick] (axis cs:8,0.805380330001881)
+--(axis cs:8,0.816019669998119);
+
+\path [draw=color1, semithick] (axis cs:9,0.872931908961962)
+--(axis cs:9,0.888534757704704);
+
+\path [draw=color1, semithick] (axis cs:10,0.878241568858488)
+--(axis cs:10,0.888891764474845);
+
+\path [draw=color2, semithick] (axis cs:1,0)
+--(axis cs:1,0);
+
+\path [draw=color2, semithick] (axis cs:2,-1.44660377352201e-05)
+--(axis cs:2,0.00061446603773522);
+
+\path [draw=color2, semithick] (axis cs:3,0.000460655337083368)
+--(axis cs:3,0.0012060113295833);
+
+\path [draw=color2, semithick] (axis cs:4,0.00082056569048002)
+--(axis cs:4,0.00231276764285331);
+
+\path [draw=color2, semithick] (axis cs:5,0.00307038187266672)
+--(axis cs:5,0.00426295146066661);
+
+\path [draw=color2, semithick] (axis cs:6,0.004524298084956)
+--(axis cs:6,0.00600903524837734);
+
+\path [draw=color2, semithick] (axis cs:7,0.00590602175693394)
+--(axis cs:7,0.00756064490973272);
+
+\path [draw=color2, semithick] (axis cs:8,0.00678963370523977)
+--(axis cs:8,0.00894369962809357);
+
+\path [draw=color2, semithick] (axis cs:9,0.00735712620719406)
+--(axis cs:9,0.0114428737928059);
+
+\path [draw=color2, semithick] (axis cs:10,0.00774044165796139)
+--(axis cs:10,0.0108595583420386);
+
+\addplot [semithick, color0, mark=-, mark size=5, mark options={solid}, only marks, forget plot]
+table {%
+1 0
+2 0
+3 0.00143257614848183
+4 0.100311682414221
+5 0.323782866196287
+6 0.539787818450319
+7 0.700002116615453
+8 0.813049391115773
+9 0.888015956935157
+10 0.882902410828573
+};
+\addplot [semithick, color0, mark=-, mark size=5, mark options={solid}, only marks, forget plot]
+table {%
+1 0
+2 0
+3 0.00290075718485151
+4 0.108954984252446
+5 0.342217133803713
+6 0.550745514883014
+7 0.720997883384547
+8 0.829017275550893
+9 0.898584043064843
+10 0.89903092250476
+};
+\addplot [semithick, color1, mark=-, mark size=5, mark options={solid}, only marks, forget plot]
+table {%
+1 0
+2 0
+3 0.000866666666666667
+4 0.0972666666666667
+5 0.315752321559721
+6 0.537401304055848
+7 0.692628704319444
+8 0.805380330001881
+9 0.872931908961962
+10 0.878241568858488
+};
+\addplot [semithick, color1, mark=-, mark size=5, mark options={solid}, only marks, forget plot]
+table {%
+1 0
+2 0
+3 0.00326666666666667
+4 0.111133333333333
+5 0.341714345106946
+6 0.564665362610819
+7 0.727437962347222
+8 0.816019669998119
+9 0.888534757704704
+10 0.888891764474845
+};
+\addplot [semithick, color2, mark=-, mark size=5, mark options={solid}, only marks, forget plot]
+table {%
+1 0
+2 -1.44660377352201e-05
+3 0.000460655337083368
+4 0.00082056569048002
+5 0.00307038187266672
+6 0.004524298084956
+7 0.00590602175693394
+8 0.00678963370523977
+9 0.00735712620719406
+10 0.00774044165796139
+};
+\addplot [semithick, color2, mark=-, mark size=5, mark options={solid}, only marks, forget plot]
+table {%
+1 0
+2 0.00061446603773522
+3 0.0012060113295833
+4 0.00231276764285331
+5 0.00426295146066661
+6 0.00600903524837734
+7 0.00756064490973272
+8 0.00894369962809357
+9 0.0114428737928059
+10 0.0108595583420386
+};
+\addplot [semithick, color0, forget plot]
+table {%
+1 0
+2 0
+3 0.00216666666666667
+4 0.104633333333333
+5 0.333
+6 0.545266666666667
+7 0.7105
+8 0.821033333333333
+9 0.8933
+10 0.890966666666667
+};
+\addplot [semithick, color1, forget plot]
+table {%
+1 0
+2 0
+3 0.00206666666666667
+4 0.1042
+5 0.328733333333333
+6 0.551033333333333
+7 0.710033333333333
+8 0.8107
+9 0.880733333333333
+10 0.883566666666667
+};
+\addplot [semithick, color2, forget plot]
+table {%
+1 0
+2 0.0003
+3 0.000833333333333333
+4 0.00156666666666667
+5 0.00366666666666667
+6 0.00526666666666667
+7 0.00673333333333333
+8 0.00786666666666667
+9 0.0094
+10 0.0093
+};
+\end{axis}
+
+\end{tikzpicture}
