@@ -26,10 +26,10 @@ def run_MC(gridsize:int, steps:int, MC_iterations:int, error=False) -> float:
     
     height = gridsize
     width = gridsize
-    m = mapgrid.generate_map(width=width, height=height)
     
     # Runs simulation in loop
     for run_idx in range(MC_iterations):
+        m = mapgrid.generate_map(width=width, height=height)
         v = vehicle.Vehicle(m)
         for i in range(steps):
             v.move_unbound()

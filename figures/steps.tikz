@@ -2,8 +2,8 @@
 \begin{tikzpicture}
 
 \definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
-\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
 \definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
 
 \begin{axis}[
 xlabel={askelten lukumäärä},
@@ -18,7 +18,7 @@ y grid style={white!69.019607843137251!black}
 legend entries={{Löytyi, aina tarkka mittaus},{Löytyi, mittausvirhe},{Ei löytynyt, mittausvirhe}},
 legend cell align={right},
 legend style={draw=white!80.0!black},
-legend style={at={(0.97,1.03)},anchor=south east}
+legend style={at={(0.03,1.03)},anchor=south west}
 ]  % replace the ending bracket
 \addlegendimage{no markers, color0}
 \addlegendimage{no markers, color1}

@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import sys
+#from scipy import stats
 
 import direction
 import vehicle
@@ -76,6 +77,49 @@ def write_lines(filename, contains, insert_this):
     with open(filename, 'w') as file:
         file.writelines( data )
 
+def fix_labels_in_tikz(*labels) -> str:
+    """
+    Generates the required insertion for to get line labels working in tikz
+    
+    The whole insertion looks something like this in a whole:
+    
+    insertion = \
+        "legend entries={{" + label1 + "},{" + label2 + "},{" + label3 + "}},"+ "\n" +\
+        "legend cell align={right}," + "\n" +\
+        "legend style={draw=white!80.0!black}," + "\n" +\
+        "legend style={at={(0.03,1.03)},anchor=south west}" + "\n" +\
+        "]  % replace the ending bracket" + "\n" +\
+        "\\addlegendimage{no markers, color0}"+ "\n" +\
+        "\\addlegendimage{no markers, color1}"+ "\n" +\
+        "\\addlegendimage{no markers, color2}%" 
+    
+    """
+    
+    insertion = ",\n"  # text insertion in tikz file after line "y grid style=..."
+    
+    label_entries = "legend entries={"
+    for i in range(len(labels)):
+        label_entries += "{" + labels[i] + "}"
+        if i != len(labels)-1:
+            label_entries += ","
+    label_entries += "},\n"
+    insertion += label_entries
+    
+    insertion += "legend cell align={right},\n"
+    insertion += "legend style={draw=white!80.0!black},\n"
+    insertion += "legend style={at={(0.03,1.03)},anchor=south west}\n"
+    insertion += "]  % replace the ending bracket\n"
+    
+    for i in range(len(labels)):
+        insertion += "\\addlegendimage{no markers, color" + str(i) + "}"
+        
+        if i != len(labels)-1:
+            insertion += "\n"
+        else:
+            insertion += "%"
+    
+    return insertion
+
     
 def plot_gridsizes_error(gridsizes0, single_matches0, gridsizes1, single_matches1):
     """
@@ -143,23 +187,13 @@ def plot_gridsizes_error(gridsizes0, single_matches0, gridsizes1, single_matches
         
         log.debug("Adding lines to file 'gridsizes.tikz' after 'begin{axis}['" + "\n")
         
-        add_label = \
-        "," + "\n" +\
-        "legend entries={{" + label1 + "},{" + label2 + "},{" + label3 + "}},"+ "\n" +\
-        "legend cell align={right}," + "\n" +\
-        "legend style={draw=white!80.0!black}," + "\n" +\
-        "legend style={at={(0.97,1.03)},anchor=south east}" + "\n" +\
-        "]  % replace the ending bracket" + "\n" +\
-        "\\addlegendimage{no markers, color0}"+ "\n" +\
-        "\\addlegendimage{no markers, color1}"+ "\n" +\
-        "\\addlegendimage{no markers, color2}%" 
-        
+        add_label = fix_labels_in_tikz(label1,label2)
         write_lines('figures/gridsizes.tikz', "y grid style", add_label)
-
     else:
         latex_save('figures/gridsizes.pgf')
         
     plt.legend()
+    
     
     plt.figure("gridsizes väärä tulos")
     plt.errorbar(gridsizes1, mean_incorrect1, yerr=err_incorrect1, capsize=5)
@@ -189,6 +223,7 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1):
     mean_mat1 = np.mean(single_matches1, axis=0)    # with 0.001 error
     err_mat0 = np.std(single_matches0, axis=0)      # (no 0.001 error)
     err_mat1 = np.std(single_matches1, axis=0)      # with 0.001 error
+    #TODO stats.sem(full_vec, ) in MC # This is not the best way to get the error
     
     # Excepted values and errorbars for probability-values of correctly found cases
     mean_correct0 = mean_mat0[:,0]
@@ -227,23 +262,13 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1):
         
         log.debug("Adding lines to file 'steps.tikz' after 'begin{axis}['" + "\n")
                  
-        add_label = \
-        "," + "\n" +\
-        "legend entries={{" + label1 + "},{" + label2 + "},{" + label3 + "}},"+ "\n" +\
-        "legend cell align={right}," + "\n" +\
-        "legend style={draw=white!80.0!black}," + "\n" +\
-        "legend style={at={(0.97,1.03)},anchor=south east}" + "\n" +\
-        "]  % replace the ending bracket" + "\n" +\
-        "\\addlegendimage{no markers, color0}"+ "\n" +\
-        "\\addlegendimage{no markers, color1}"+ "\n" +\
-        "\\addlegendimage{no markers, color2}%" 
-        
+        add_label = fix_labels_in_tikz(label1,label2,label3)
         write_lines('figures/steps.tikz', "y grid style", add_label)
-                
     else:
         latex_save('figures/steps.pgf')
     
     plt.legend()
+    
     
     plt.figure("steps väärä tulos")
     plt.errorbar(steps1, mean_incorrect1, yerr=err_incorrect1, capsize=5)
