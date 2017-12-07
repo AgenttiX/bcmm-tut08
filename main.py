@@ -75,8 +75,8 @@ def plot_monte_carlos(num_runs=20, iterations=1000, use_stored_results=[True,Tru
                                                                 use_stored_results=use_stored_results[1], 
                                                                 error=True)
     
-    plotter.plot_gridsizes_error(gridsizes_0, Prob_MC_matrix_gs_0, gridsizes_1, Prob_MC_matrix_gs_1)
-    plotter.plot_steps_error(steps_0, Prob_MC_matrix_st_0, steps_1, Prob_MC_matrix_st_1)
+    plotter.plot_gridsizes_error(gridsizes_0, Prob_MC_matrix_gs_0, gridsizes_1, Prob_MC_matrix_gs_1, num_runs)
+    plotter.plot_steps_error(steps_0, Prob_MC_matrix_st_0, steps_1, Prob_MC_matrix_st_1, num_runs)
     
     plt.show()
 

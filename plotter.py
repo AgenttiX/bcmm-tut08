@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import sys
-#from scipy import stats
 
 import direction
 import vehicle
@@ -12,10 +11,12 @@ log = logger.getLogger(__name__, level="DEBUG", disabled=False, colors=True)
 
 plt2tikZ_is_crappy = False
 if not plt2tikZ_is_crappy:
-    from matplotlib2tikz import save as latex_save
+    from matplotlib2tikz import save as tikz_save
 else:
-    def latex_save(name):
-        plt.savefig(name)
+    def tikz_save(asdf):
+        pass
+
+        
 
 
 
@@ -54,10 +55,10 @@ class LocatorPlot:
         
 
 
+# These 5 functions are for tikz saving process
 
 def block_print(): 
     sys.stdout = open(os.devnull, 'w')
-
 
 def enable_print():
     sys.stdout = sys.__stdout__
@@ -120,8 +121,21 @@ def fix_labels_in_tikz(*labels) -> str:
     
     return insertion
 
+
+def tikz_save_with_labels(pathname,labels):
     
-def plot_gridsizes_error(gridsizes0, single_matches0, gridsizes1, single_matches1):
+    block_print()
+    tikz_save(pathname)
+    enable_print()
+        
+    log.debug("Adding lines to file 'gridsizes.tikz' in part 'begin{axis}['" + "\n")
+        
+    add_label = fix_labels_in_tikz(*labels)
+    write_lines('figures/gridsizes.tikz', "y grid style", add_label)
+
+
+    
+def plot_gridsizes_error(gridsizes0, single_matches0, gridsizes1, single_matches1, num_runs):
     """
     Plots for probabilities as function of gridsizes
     
@@ -131,12 +145,13 @@ def plot_gridsizes_error(gridsizes0, single_matches0, gridsizes1, single_matches
         gridsizes1          -  vec
         single_matches1     -  probability-matrix to find single match with 0.001 error. 
                                Includes both correct and incorrect matches
+        num_runs            -  number of run-sets, is about 10
     """
     # Matrix excepted values and errorbars
-    mean_mat0 = np.mean(single_matches0, axis=0)    # (no 0.001 error)
-    mean_mat1 = np.mean(single_matches1, axis=0)    # with 0.001 error
-    err_mat0 = np.std(single_matches0, axis=0)      # (no 0.001 error)
-    err_mat1 = np.std(single_matches1, axis=0)      # with 0.001 error
+    mean_mat0 = np.mean(single_matches0, axis=0)                        # (no 0.001 error)
+    mean_mat1 = np.mean(single_matches1, axis=0)                        # with 0.001 error
+    err_mat0 = np.std(single_matches0, axis=0) / np.sqrt(num_runs)      # (no 0.001 error)
+    err_mat1 = np.std(single_matches1, axis=0) / np.sqrt(num_runs)      # with 0.001 error
     
     # Excepted values and errorbars for probability-values of correctly found cases
     mean_correct0 = mean_mat0[:,0]
@@ -182,15 +197,16 @@ def plot_gridsizes_error(gridsizes0, single_matches0, gridsizes1, single_matches
     
     if not plt2tikZ_is_crappy:
         block_print()
-        latex_save('figures/gridsizes.tikz')
+        tikz_save('figures/gridsizes.tikz')
         enable_print()
         
         log.debug("Adding lines to file 'gridsizes.tikz' after 'begin{axis}['" + "\n")
         
         add_label = fix_labels_in_tikz(label1,label2)
         write_lines('figures/gridsizes.tikz', "y grid style", add_label)
+        
     else:
-        latex_save('figures/gridsizes.pgf')
+        plt.savefig('figures/gridsizes.pgf')
         
     plt.legend()
     
@@ -202,12 +218,12 @@ def plot_gridsizes_error(gridsizes0, single_matches0, gridsizes1, single_matches
     
     if not plt2tikZ_is_crappy:
         block_print()
-        latex_save('figures/gridsizes_incorrect_result.tikz')
+        tikz_save('figures/gridsizes_incorrect_result.tikz')
         enable_print()
     else:
-        latex_save('figures/gridsizes_incorrect_result.pgf')
+        plt.savefig('figures/gridsizes_incorrect_result.pgf')
     
-def plot_steps_error(steps0, single_matches0, steps1, single_matches1):
+def plot_steps_error(steps0, single_matches0, steps1, single_matches1, num_runs):
     """
     Plots for probabilities as function of gridsizes
     
@@ -217,13 +233,15 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1):
         steps1              -
         single_matches1     -  probability-matrix to find single match with 0.001 error. 
                                Includes both correct and incorrect matches
+        num_runs            -  number of run-sets, is about 10. Used in calculation of error in mean
+                       
     """
     # Matrix excepted values and errorbars
-    mean_mat0 = np.mean(single_matches0, axis=0)    # (no 0.001 error)
-    mean_mat1 = np.mean(single_matches1, axis=0)    # with 0.001 error
-    err_mat0 = np.std(single_matches0, axis=0)      # (no 0.001 error)
-    err_mat1 = np.std(single_matches1, axis=0)      # with 0.001 error
-    #TODO stats.sem(full_vec, ) in MC # This is not the best way to get the error
+    mean_mat0 = np.mean(single_matches0, axis=0)                        # (no 0.001 error)
+    mean_mat1 = np.mean(single_matches1, axis=0)                        # with 0.001 error
+    err_mat0 = np.std(single_matches0, axis=0) / np.sqrt(num_runs)      # (no 0.001 error)
+    err_mat1 = np.std(single_matches1, axis=0) / np.sqrt(num_runs)      # with 0.001 error Used in calculation of error in mean
+    
     
     # Excepted values and errorbars for probability-values of correctly found cases
     mean_correct0 = mean_mat0[:,0]
@@ -257,7 +275,7 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1):
     
     if not plt2tikZ_is_crappy:
         block_print()
-        latex_save('figures/steps.tikz')
+        tikz_save('figures/steps.tikz')
         enable_print()
         
         log.debug("Adding lines to file 'steps.tikz' after 'begin{axis}['" + "\n")
@@ -265,7 +283,7 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1):
         add_label = fix_labels_in_tikz(label1,label2,label3)
         write_lines('figures/steps.tikz', "y grid style", add_label)
     else:
-        latex_save('figures/steps.pgf')
+        plt.savefig('figures/steps.pgf')
     
     plt.legend()
     
@@ -277,11 +295,11 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1):
 
     if not plt2tikZ_is_crappy:
         block_print()
-        latex_save('figures/steps_incorrect_result.tikz')
+        tikz_save('figures/steps_incorrect_result.tikz')
         enable_print()
         
     else:
-        latex_save('figures/steps_incorrect_result.pgf')
+        plt.savefig('figures/steps_incorrect_result.pgf')
     
 
 
