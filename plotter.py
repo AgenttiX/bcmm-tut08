@@ -304,3 +304,7 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1, num_runs)
         
     else:
         plt.savefig('figures/steps_incorrect_result.pgf')
+
+
+def plot_conf_mat():
+    pass

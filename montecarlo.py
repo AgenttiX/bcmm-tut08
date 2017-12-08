@@ -58,7 +58,75 @@ def run_MC(gridsize:int, steps:int, MC_iterations:int, error=False) -> float:
 
 
 
-def plot_curves_gridsizes(steps=10, num_runs=10, iterations=1000, plot=True, use_stored_results=False, error=False) \
+def run_MC_2(gridsize:int, steps:int, MC_iterations:int) -> float:
+    """
+    Does Monte Carlo-simulation with given parametes.
+    Sensitivity and specificity, confusion 4-matrix,
+    
+    return 2*2*2 np.ndarray, in which [0,:,:] is mean values and [1,:,:] is error
+    """
+    
+    true_pos = 0
+    true_neg = 0
+    false_pos = 0
+    false_neg = 0
+    
+    # all confusion matrices (like ...0100,0010...)
+    results_mat = np.zeros((MC_iterations,2,2), dtype=int)
+    
+    height = gridsize
+    width = gridsize
+    
+    # Runs simulation in loop
+    for run_idx in range(MC_iterations):
+        m = mapgrid.generate_map(width=width, height=height)
+        v = vehicle.Vehicle(m)
+        for i in range(steps):
+            v.move_unbound()
+        
+
+        num_found_exact, x, y    = locator.locate(v.map(), v.history_error(iteration_for_seed=run_idx))
+        num_found_inextact, x, y = locator.locate(v.map(), v.history())
+        
+        if (num_found_exact == 1) and (num_found_inextact == 1):
+            true_pos += 1
+        elif (num_found_exact != 1) and (num_found_inextact != 1):
+            true_neg += 1
+        elif (num_found_exact == 1) and (num_found_inextact != 1):
+            false_neg += 1
+        elif (num_found_exact != 1) and (num_found_inextact == 1):
+            false_pos += 1
+        
+        confusion_mat = np.ndarray(((true_pos,false_neg), (false_pos,true_neg)))
+        results_mat[run_idx,:,:] = confusion_mat
+    
+    #confusion mat
+    mean_mat = np.mean(results_mat, axis=0)
+    err_mat = np.std(results_mat,axis=0) / np.sqrt(MC_iterations)
+    
+    return np.array((mean_mat, err_mat))
+
+def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, filename="Unnamed", use_stored_results=False):
+    """
+    If gridsize or steps is <0 then that value is iterated
+    """
+    
+    gridsize_vec = np.arange(10,60,5)
+    steps_vec = np.arange(1,10+1)
+    
+    if gridsize < 0:
+        for gs in gridsize_vec:
+            pass
+    
+    
+    if variate == "gridsizes":
+        
+        if not use_stored_results:
+            pass
+
+
+
+def calc_curves_gridsizes(steps=10, num_runs=10, iterations=1000, plot=True, use_stored_results=False, error=False) \
     -> tp.Tuple[np.ndarray, np.ndarray]:
     """
     Does multiple Monte Carlo simulations with different values for gridsize. 
@@ -104,7 +172,7 @@ def plot_curves_gridsizes(steps=10, num_runs=10, iterations=1000, plot=True, use
 
 
 
-def plot_curves_steps(gridsize=20, num_runs=10, iterations=1000, plot=True, use_stored_results=False, error=False) \
+def calc_curves_steps(gridsize=20, num_runs=10, iterations=1000, plot=True, use_stored_results=False, error=False) \
     -> tp.Tuple[np.ndarray, np.ndarray]:
     """
     Does multiple Monte Carlo simulations with different values for steps. 
