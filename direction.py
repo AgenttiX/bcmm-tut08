@@ -5,6 +5,10 @@ log = logger.getLogger(__name__, level="DEBUG", disabled=True)
 
 @enum.unique
 class Direction(enum.IntEnum):
+    """
+    Absolute directions based on compass points
+    """
+
     EAST = 0
     NORTH = 1
     WEST = 2
@@ -25,6 +29,10 @@ class Direction(enum.IntEnum):
 
 @enum.unique
 class RelativeDirection(enum.IntEnum):
+    """
+    Directions relative to a reference point (such as the rotation of a vehicle)
+    """
+
     RIGHT = 3
     FRONT = 0
     LEFT = 1
@@ -45,6 +53,8 @@ class RelativeDirection(enum.IntEnum):
         else:
             raise ValueError("Invalid relative direction")
 
+
+# Usage examples
 if __name__ == "__main__":
     test = Direction(1)
 

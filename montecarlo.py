@@ -9,7 +9,7 @@ import vehicle
 import typing as tp
 
 
-import logger;
+import logger
 log = logger.getLogger(__name__, level="DEBUG", disabled=False, colors=True)
 
 #import matplotlib.pyplot as plt

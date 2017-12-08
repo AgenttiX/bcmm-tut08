@@ -2,7 +2,6 @@ import color
 import direction
 
 import collections
-import enum
 import numpy as np
 import typing
 
@@ -11,6 +10,9 @@ log = logger.getLogger(__name__, level="DEBUG", disabled=True)
 
 
 class Vehicle:
+    """
+    A vehicle that moves on a map
+    """
     __max_history = 10
 
     def __init__(self, map_grid: np.ndarray):
@@ -28,12 +30,24 @@ class Vehicle:
         self.__history.append((0, self.color()))
 
     def start_direction(self):
+        """
+        Get the absolute start direction of the vehicle
+        :return: absolute start direction
+        """
         return self.__start_direction
 
     def location(self) -> typing.Tuple[int, int, int]:
+        """
+        Get the absolute location and direction of the vehicle
+        :return: x, y, direction
+        """
         return self.__x, self.__y, self.__direction
 
     def color(self) -> color.Color:
+        """
+        Get the color of the cell the vehicle is currently on
+        :return:
+        """
         return color.Color(self.__map[self.__y, self.__x])
 
     def history(self) -> np.ndarray:
@@ -80,9 +94,10 @@ class Vehicle:
         
         np.random.seed(np.mod(int(id(self)), 2**16)+iteration_for_seed) 
         # seed can not be too large (memory address) :P
-        # id(object) gives only like two different values --> python uses same memory addresses for object in loop re-initialization
-        rnd_colors = np.random.randint(3, size=self.__max_history)+1 # Note error can not be same color (so therefore 1,2,3)
-        rnd_prob = (np.random.random(self.__max_history) < 0.001).astype(int) # vector [0,0,...0,1,0,..0]
+        # id(object) gives only like two different values
+        # --> python uses same memory addresses for object in loop re-initialization
+        rnd_colors = np.random.randint(3, size=self.__max_history)+1  # Note: error can not be same color (so therefore 1,2,3)
+        rnd_prob = (np.random.random(self.__max_history) < 0.001).astype(int)  # vector [0,0,...0,1,0,..0]
         np.random.seed(None)
 
         # altered_history
@@ -91,37 +106,45 @@ class Vehicle:
         return arr
 
     def map(self) -> np.ndarray:
+        """
+        Get the map the vehicle is moving on
+        :return: map (numpy array)
+        """
         return self.__map.copy()
 
-    def move(self):
-        dir = np.random.randint(low=0, high=3)
-        self.__direction = dir
+    def move_bounded(self):
+        """
+        Move in such a way that the borders of the map are not crossed
+        :return: -
+        """
+        d = np.random.randint(low=0, high=3)
+        self.__direction = d
 
         moved_here = False
-        if dir == direction.Direction.EAST:
+        if d == direction.Direction.EAST:
             if self.__x < self.__map.shape[1]-1:
                 self.__x += 1
                 moved_here = True
             else:
-                self.move()
-        elif dir == direction.Direction.WEST:
+                self.move_bounded()
+        elif d == direction.Direction.WEST:
             if self.__x > 0:
                 self.__x -= 1
                 moved_here = True
             else:
-                self.move()
-        elif dir == direction.Direction.NORTH:
+                self.move_bounded()
+        elif d == direction.Direction.NORTH:
             if self.__y > 0:
                 self.__y -= 1
                 moved_here = True
             else:
-                self.move()
-        elif dir == direction.Direction.SOUTH:
+                self.move_bounded()
+        elif d == direction.Direction.SOUTH:
             if self.__y < self.__map.shape[0]-1:
                 self.__y += 1
                 moved_here = True
             else:
-                self.move()
+                self.move_bounded()
         else:
             raise RuntimeError("Invalid direction in movement")
 
@@ -131,6 +154,10 @@ class Vehicle:
             # print("Moving", direction.Direction(self.__direction), direction.RelativeDirection(rel_dir))
 
     def move_unbound(self):
+        """
+        Move in a way not bounded by the map edges
+        :return: -
+        """
         dir = np.random.randint(low=0, high=3)
         self.__direction = dir
         
