@@ -147,7 +147,15 @@ class _Logger:
         self._logger.addHandler(console_handler)
 
 
-def get_logger(name, level="DEBUG", disabled=False, colors=False):
+def get_logger(name, level="DEBUG", disabled=False, colors=False) -> _Logger:
+    """
+    Get a new logger object with the given name
+    :param name: module name (or similar)
+    :param level: logging level
+    :param disabled: whether the output should be disabled
+    :param colors: use colors
+    :return: logger object
+    """
     log = _Logger(name)
     log.set_level(level, colors=colors)
     log.get_actual_logger().disabled = disabled
