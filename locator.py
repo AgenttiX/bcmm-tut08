@@ -11,7 +11,7 @@ log = logger.get_logger(__name__, level="DEBUG", disabled=False)
 
 
 def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None, skip: tp.Union[int, tp.List[int]] = None) \
-        -> tp.Tuple[int, int, int]:
+        -> tp.Tuple[int, int, int, np.ndarray]:
     """
     Vehicle locator algorithm
     :param m: map (numpy array)
@@ -52,7 +52,7 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None, skip: 
     for y in range(history.shape[0]):
         log.debug(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]), history[y, 2], history[y, 3])
 
-    if skip_list is not None and 0 in skip_list:
+    if (skip_list is not None) and (0 in skip_list):
         possible_start_loc = np.ones(m.shape, dtype=bool)
     else:
         possible_start_loc = np.equal(m, history[0, 1])
@@ -151,15 +151,56 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None, skip: 
 
     num_matches = possible_y.size
 
-    location_time = time.perf_counter() - start_time
-    log.debug("Location took", location_time)
+    log.debug("Location took", time.perf_counter() - start_time)
 
     if num_matches == 0:
         log.debug("No suitable places found")
-        return num_matches, -9999, -9999
-    if num_matches == 1 and possible_x.size == 1:
+        loc_x = -9999
+        loc_y = -9999
+    elif num_matches == 1 and possible_x.size == 1:
         log.debug("Found location", possible_x[0], possible_y[0])
-        return num_matches, possible_x[0], possible_y[0]
+        loc_x = possible_x[0]
+        loc_y = possible_y[0]
     else:
         log.debug("Multiple possible locations found")
-        return num_matches, -9999, -9999
+        loc_x = -9999
+        loc_y = -9999
+
+    return num_matches, loc_x, loc_y, possible_loc
+
+
+def locate_with_one_possible_error(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None):
+    """
+    Try locating when exactly one of the data points can be wrong
+    :param m: map (numpy array)
+    :param history: vehicle history (numpy array)
+    :param v: vehicle for debugging purposes
+    :return:
+    """
+    start_time = time.perf_counter()
+    possible_total_loc = np.zeros(m.shape)
+
+    for i in range(history.shape[0]):
+        num_matches, x, y, possible_loc = locate(m, history, v=v, skip=i)
+        possible_total_loc = np.logical_or(possible_total_loc, possible_loc)
+
+    log.debug("Possible locations with error handling:\n", possible_total_loc.astype(int))
+    possible_y, possible_x = possible_total_loc.nonzero()
+    num_matches = possible_y.size
+
+    log.debug("Locating with error handling took", time.perf_counter() - start_time)
+
+    if num_matches == 0:
+        log.debug("No suitable places found")
+        loc_x = -9999
+        loc_y = -9999
+    elif num_matches == 1 and possible_x.size == 1:
+        log.debug("Found location", possible_x[0], possible_y[0])
+        loc_x = possible_x[0]
+        loc_y = possible_y[0]
+    else:
+        log.debug("Multiple possible locations found")
+        loc_x = -9999
+        loc_y = -9999
+
+    return num_matches, loc_x, loc_y, possible_total_loc

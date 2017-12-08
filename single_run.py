@@ -30,10 +30,11 @@ def plot_single_run():
         plot.plot_vehicle()
 
     # found, x, y = locator.locate(v.map(), v.history(), v)
-    num_matches, x, y = locator.locate(v.map(), v.history())
+    num_matches, x, y, possible_loc = locator.locate(v.map(), v.history())
 
     log.info("End location:", v.location())
     log.info("End color:", v.color())
+
     if num_matches == 1:
         loc_x, loc_y, dir = v.location()
         log.info(
@@ -59,6 +60,10 @@ def plot_single_run():
         match = graph_utils.graph_matcher(map_graph, history_graphs[i])
         print("Start direction", direction.Direction(i), "graph match:", match)
     """
+
+    # History error handling test
+    locator.locate_with_one_possible_error(v.map(), v.history())
+    locator.locate_with_one_possible_error(v.map(), v.history_error_fixed())
 
     plot.show()
 
