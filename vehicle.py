@@ -87,21 +87,23 @@ class Vehicle:
         return arr
     """
     
-    def history_error(self, iteration_for_seed=None) -> np.ndarray:
+    def history_error(self, iteration_for_seed) -> np.ndarray:
         """
-        Get movement history that has measurement error in it. 
+        Get movement history that has a single measurement error in it.
         
         This uses unique id of the vehicle-object as a seed for random generator, so it is
         allowed to call this method more than once in a single lifetime.
         
-        :return: numpy array of (direction, color)
+        :return: numpy array of (direction, color, garbage, garbage)
         """
         l = len(self.__history)
-        arr = np.zeros(shape=(l, 2))
+        arr = np.zeros(shape=(l, 4), dtype=int)
         for i in range(l):
             snapshot = self.__history[i]
             arr[i, 0] = snapshot[0]
             arr[i, 1] = snapshot[1]
+            arr[i, 2] = snapshot[2]
+            arr[i, 3] = snapshot[3]
         
         np.random.seed(np.mod(int(id(self)), 2**16)+iteration_for_seed) 
         # seed can not be too large (memory address) :P
@@ -115,6 +117,18 @@ class Vehicle:
         arr[:, 1] = np.mod(arr[:, 1] + (rnd_colors*rnd_prob)[0 : l], 4)
         
         return arr
+
+    def history_error_fixed(self) -> np.ndarray:
+        """
+        Get movement history that has a single measurement error in it
+        :return: numpy array of (direction, color, garbage, garbage)
+        """
+        history = self.history()
+        change_index = np.random.randint(0, history.shape[0])
+        change_value = np.random.randint(1, 4)
+        history[change_index, 1] = (history[change_index, 1] + change_value) % 4
+
+        return history
 
     def map(self) -> np.ndarray:
         """
