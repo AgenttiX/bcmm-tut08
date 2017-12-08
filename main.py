@@ -39,10 +39,17 @@ def plot_monte_carlos(num_runs=20, iterations=1000, use_stored_results=[True,Tru
     plotter.plot_steps_error(steps_0, Prob_MC_matrix_st_0, steps_1, Prob_MC_matrix_st_1, num_runs)
     
     plt.show()
+    
+def plot_classification_and_erros():
+    
+    x_axis, var_map = calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="variate_map", use_stored_results=False)
+    x_axis, var_steps = calc_confusion_mat(gridsize=20, steps=-1, iterations=1000, dirname="variate_steps", use_stored_results=False)
+    
+    plotter.plot_conf_mat()
+    
 
 
 def main():
-    #plot_monte_carlos(num_runs=10, iterations=3000, use_stored_results=[True, True])
     plot_monte_carlos(num_runs=20, iterations=3000, use_stored_results=[True, True])
     #montecarlo.log_stuff()
     #montecarlo.debug_my_stuff()

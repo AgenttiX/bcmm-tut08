@@ -15,7 +15,7 @@ log = logger.get_logger(__name__, level="DEBUG", disabled=False, colors=True)
 #import matplotlib.pyplot as plt
 
 
-def run_MC(gridsize:int, steps:int, MC_iterations:int, error=False) -> float:
+def run_MC(gridsize:int, steps:int, MC_iterations:int, error=False) -> np.ndarray:
     """
     Does Monte Carlo-simulation with given parametes.
     """
@@ -58,7 +58,7 @@ def run_MC(gridsize:int, steps:int, MC_iterations:int, error=False) -> float:
 
 
 
-def run_MC_2(gridsize:int, steps:int, MC_iterations:int) -> float:
+def run_MC_2(gridsize:int, steps:int, MC_iterations:int) -> np.ndarray:
     """
     Does Monte Carlo-simulation with given parametes.
     Sensitivity and specificity, confusion 4-matrix,
@@ -106,24 +106,64 @@ def run_MC_2(gridsize:int, steps:int, MC_iterations:int) -> float:
     
     return np.array((mean_mat, err_mat))
 
-def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, filename="Unnamed", use_stored_results=False):
-    """
-    If gridsize or steps is <0 then that value is iterated
-    """
-    
-    gridsize_vec = np.arange(10,60,5)
-    steps_vec = np.arange(1,10+1)
-    
-    if gridsize < 0:
-        for gs in gridsize_vec:
-            pass
-    
-    
-    if variate == "gridsizes":
-        
-        if not use_stored_results:
-            pass
 
+
+def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed", use_stored_results=False):
+    """
+    Calulates the confusion matrices (and errorbars) for given arguments.
+    If gridsize or steps value -1 then that value is the one calculated over range
+    """
+    # res_vec (result vector) dimensions: 
+    #       0: variating value, ~10-20
+    #       1: mean and std-error 0, 1
+    #       2: positive, negative (measurement error)
+    #       3: true, false (no measurement error)
+    res_vec = None  # np.empty((10,2,2,2))
+    x_axis = None  #gridsizes, or steps
+    
+    dir_base = "calulated_results/"+dirname+"__itr"+str(iterations)
+    create_directory_if_it_doesnt_exist_already(dir_base)
+    filename = dir_base+"/gs"+str(gridsize)+"_st"+str(steps)+".npy"
+    
+    if not use_stored_results:        
+        for i, gs in enumerate(gridsizes):
+            log.debug("Process:", str(i)+"/"+str(len(gridsizes)-1), " gridsize:", gs)
+            
+            found_one[run_idx,i,:]= run_MC(gs, steps, iterations, error=error)
+        
+        dir = "calulated_results/var_map_size__itr"+str(iterations)+"_st"+str(steps)+"_err"+str(int(error))
+        create_directory_if_it_doesnt_exist_already(dir)
+        np.save(dir+"/idx"+str(run_idx)+".npy", found_one[run_idx,:,:])
+
+
+        if gridsize == -1:
+            gridsize_vec = np.arange(10,60,5)
+            x_axis = gridsize_vec
+            res_vec = np.zeros((len(gridsize_vec),2,2,2))
+            
+            for i, gs in enumerate(gridsize_vec):
+                res_vec[i,:,:,:] = run_MC_2(gs, steps, iterations)
+            
+
+        elif steps == -1:
+            steps_vec = np.arange(1,10+1)
+            x_axis = steps_vec
+            res_vec = np.zeros((len(steps_vec),2,2,2))
+            
+            for i, st in enumerate(steps_vec):
+                res_vec[i,:,:,:] = run_MC_2(gridsize, st, iterations)
+        
+        
+        np.save(filename, res_vec)
+                
+    # get pre calculated data
+    else:
+        if not os.path.exists(dir_base):
+            raise Exception("No calulations exists (yet) with these parameters")
+        
+        res_vec = np.load(filename)
+    
+    return x_axis, res_vec
 
 
 def calc_curves_gridsizes(steps=10, num_runs=10, iterations=1000, plot=True, use_stored_results=False, error=False) \

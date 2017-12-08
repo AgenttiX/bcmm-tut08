@@ -306,5 +306,51 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1, num_runs)
         plt.savefig('figures/steps_incorrect_result.pgf')
 
 
-def plot_conf_mat():
-    pass
+def plot_conf_mat(x_axis, mat, xlabel="", ylim=(0,1)):
+    # Labels 
+    TP_l = "TP"
+    FN_l = "FN"
+    FP_l = "FP"
+    TN_l = "TN"
+    
+    TP_mean = mat[:,0,0,0]
+    FN_mean = mat[:,0,1,0]
+    FP_mean = mat[:,0,0,1]
+    TN_mean = mat[:,0,1,1]
+    
+    TP_err = mat[:,1,0,0]
+    FN_err = mat[:,1,1,0]
+    FP_err = mat[:,1,0,1]
+    TN_err = mat[:,1,1,1]
+    
+    plt.figure(xlabel)
+    
+    plt.errorbar(x_axis, TP_mean, yerr=TP_err, capsize=4, label=TP_l)
+    plt.errorbar(x_axis, FN_mean, yerr=FN_err, capsize=4, label=FN_l)
+    plt.errorbar(x_axis, FP_mean, yerr=FP_err, capsize=4, label=FP_l)
+    plt.errorbar(x_axis, TN_mean, yerr=TN_err, capsize=4, label=TN_l)
+    
+    plt.xlabel(xlabel)
+    plt.ylabel("P")
+    plt.ylim(ylim)
+    
+    if not plt2tikZ_is_crappy:
+        block_print()
+        tikz_save('figures/' + xlabel + '.tikz')
+        enable_print()
+        
+        log.debug("Adding lines to file 'figures/' + xlabel + '.tikz' after 'begin{axis}['" + "\n")
+                 
+        add_label = fix_labels_in_tikz(TP_l,FN_l,FP_l,TN_l)
+        write_lines('figures/steps.tikz', "y grid style", add_label)
+    else:
+        plt.savefig('figures/steps.pgf')
+    
+    plt.legend()
+    
+    
+    
+        
+    
+    
+    
