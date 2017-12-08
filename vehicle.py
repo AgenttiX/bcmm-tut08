@@ -172,10 +172,10 @@ class Vehicle:
         Move in a way not bounded by the map edges
         :return: -
         """
-        d = direction.RelativeDirection(np.random.randint(low=0, high=3))
+        d = direction.Direction(np.random.randint(low=0, high=3))
         self.__direction = d
         
-        dx, dy = direction.Direction(d).xy()
+        dx, dy = d.xy()
         
         self.__x = (self.__x+dx) % self.__map.shape[0]  # modulus works with negative numbers -1%10 = 9
         self.__y = (self.__y+dy) % self.__map.shape[1]
