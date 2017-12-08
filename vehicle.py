@@ -14,7 +14,7 @@ class Vehicle:
     A vehicle that moves on a map
     """
 
-    def __init__(self, map_grid: np.ndarray, max_history=10):
+    def __init__(self, map_grid: np.ndarray, max_history=10, start_direction=None):
         self.__map = map_grid
         self.__max_history = max_history
 
@@ -23,7 +23,13 @@ class Vehicle:
         self.__rel_y = 0
         self.__rel_x = 0
 
-        self.__direction = direction.Direction(np.random.randint(low=0, high=3))
+        if start_direction is None:
+            self.__direction = direction.Direction(np.random.randint(low=0, high=3))
+        elif 0 <= start_direction <= 3:
+            self.__direction = direction.Direction(start_direction)
+        else:
+            raise ValueError("Invalid start direction")
+
         self.__start_direction = self.__direction
 
         log.info("Starting at direction", self.__direction)
