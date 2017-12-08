@@ -1,6 +1,6 @@
 import enum
 import logger
-log = logger.getLogger(__name__, level="DEBUG", disabled=True)
+log = logger.get_logger(__name__, level="DEBUG", disabled=True)
 
 
 @enum.unique

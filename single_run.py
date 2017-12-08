@@ -4,7 +4,7 @@ import mapgrid
 import vehicle
 import plotter
 
-log = logger.getLogger(__name__, level="DEBUG", disabled=False)  # Root logger
+log = logger.get_logger(__name__, level="DEBUG", disabled=False)  # Root logger
 
 
 def plot_single_run():

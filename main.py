@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 import plotter
 import logger
-log = logger.getLogger(__name__, level="DEBUG", disabled=False)  # Root logger
+log = logger.get_logger(__name__, level="DEBUG", disabled=False)  # Root logger
 import montecarlo
 
 

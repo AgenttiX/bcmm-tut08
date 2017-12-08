@@ -7,7 +7,7 @@ import sys
 import direction
 import vehicle
 import logger
-log = logger.getLogger(__name__, level="DEBUG", disabled=False, colors=True)
+log = logger.get_logger(__name__, level="DEBUG", disabled=False, colors=True)
 
 plt2tikZ_is_crappy = False
 if not plt2tikZ_is_crappy:
@@ -54,7 +54,6 @@ class LocatorPlot:
 
     def show(self):
         plt.show()
-
 
 
 # These 5 functions are for tikz saving process

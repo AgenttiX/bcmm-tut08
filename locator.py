@@ -6,7 +6,7 @@ import numpy as np
 import typing
 
 import logger
-log = logger.getLogger(__name__, level="DEBUG", disabled=True)
+log = logger.get_logger(__name__, level="DEBUG", disabled=True)
 
 
 def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typing.Tuple[int, int, int]:
