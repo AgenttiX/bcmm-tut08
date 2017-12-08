@@ -12,13 +12,10 @@ log = logger.getLogger(__name__, level="DEBUG", disabled=False, colors=True)
 plt2tikZ_is_crappy = False
 if not plt2tikZ_is_crappy:
     from matplotlib2tikz import save as tikz_save
+    # https://github.com/nschloe/matplotlib2tikz
 else:
     def tikz_save(asdf):
         pass
-
-        
-
-
 
 
 class LocatorPlot:
@@ -32,8 +29,8 @@ class LocatorPlot:
         # ["w", "r", "g", "b"]
     )[0]
 
-    def __init__(self, vehicle):
-        self.__vehicle = vehicle
+    def __init__(self, v: vehicle.Vehicle):
+        self.__vehicle = v
 
     def plot_map(self):
         plt.imshow(self.__vehicle.map(), cmap=self.__colormap)
@@ -50,9 +47,14 @@ class LocatorPlot:
             head_length=0.3
         )
 
+    def save(self, filename: str):
+        tikz_save(filename + ".tex")
+        plt.savefig(filename + ".png")
+        plt.savefig(filename + ".eps")
+
     def show(self):
         plt.show()
-        
+
 
 
 # These 5 functions are for tikz saving process
@@ -60,8 +62,10 @@ class LocatorPlot:
 def block_print(): 
     sys.stdout = open(os.devnull, 'w')
 
+
 def enable_print():
     sys.stdout = sys.__stdout__
+
 
 def write_lines(filename, contains, insert_this):
     """
@@ -77,6 +81,7 @@ def write_lines(filename, contains, insert_this):
 
     with open(filename, 'w') as file:
         file.writelines( data )
+
 
 def fix_labels_in_tikz(*labels) -> str:
     """
@@ -134,7 +139,6 @@ def tikz_save_with_labels(pathname,labels):
     write_lines('figures/gridsizes.tikz', "y grid style", add_label)
 
 
-    
 def plot_gridsizes_error(gridsizes0, single_matches0, gridsizes1, single_matches1, num_runs):
     """
     Plots for probabilities as function of gridsizes
@@ -222,7 +226,8 @@ def plot_gridsizes_error(gridsizes0, single_matches0, gridsizes1, single_matches
         enable_print()
     else:
         plt.savefig('figures/gridsizes_incorrect_result.pgf')
-    
+
+
 def plot_steps_error(steps0, single_matches0, steps1, single_matches1, num_runs):
     """
     Plots for probabilities as function of gridsizes
@@ -300,7 +305,3 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1, num_runs)
         
     else:
         plt.savefig('figures/steps_incorrect_result.pgf')
-    
-
-
-
