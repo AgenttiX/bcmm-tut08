@@ -33,6 +33,18 @@ class RelativeDirection(enum.IntEnum):
     def reverse(self):
         return RelativeDirection((self + 2) % 4)
 
+    def xy(self):
+        if self.value == RelativeDirection.RIGHT:
+            return 1, 0
+        elif self.value == RelativeDirection.FRONT:
+            return 0, 1
+        elif self.value == RelativeDirection.LEFT:
+            return -1, 0
+        elif self.value == RelativeDirection.BACK:
+            return 0, -1
+        else:
+            raise ValueError("Invalid relative direction")
+
 if __name__ == "__main__":
     test = Direction(1)
 
