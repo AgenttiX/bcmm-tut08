@@ -19,15 +19,17 @@ class Vehicle:
         self.__map = map_grid
         self.__y = np.random.randint(low=0, high=self.__map.shape[0] - 1)
         self.__x = np.random.randint(low=0, high=self.__map.shape[1] - 1)
+        self.__rel_y = 0
+        self.__rel_x = 0
 
-        self.__direction = np.random.randint(low=0, high=3)
+        self.__direction = direction.Direction(np.random.randint(low=0, high=3))
         self.__start_direction = self.__direction
 
-        log.info("Starting at direction", direction.Direction(self.__direction))
+        log.info("Starting at direction", self.__direction)
 
         self.__history = collections.deque(maxlen=self.__max_history)
 
-        self.__history.append((0, self.color()))
+        self.__history.append((direction.RelativeDirection.FRONT, self.color(), 0, 0))
 
     def start_direction(self):
         """
@@ -56,11 +58,13 @@ class Vehicle:
         :return: numpy array of (direction, color)
         """
         l = len(self.__history)
-        arr = np.zeros(shape=(l, 2))
+        arr = np.zeros(shape=(l, 4))
         for i in range(l):
             snapshot = self.__history[i]
             arr[i, 0] = snapshot[0]
             arr[i, 1] = snapshot[1]
+            arr[i, 2] = snapshot[2]
+            arr[i, 3] = snapshot[3]
         return arr
 
     """
@@ -149,8 +153,11 @@ class Vehicle:
             raise RuntimeError("Invalid direction in movement")
 
         if moved_here:
-            rel_dir = (self.__direction - self.__start_direction) % 4
-            self.__history.append((rel_dir, self.color()))
+            rel_dir = direction.RelativeDirection((self.__direction - self.__start_direction) % 4)
+            rel_dx, rel_dy = rel_dir.xy()
+            self.__rel_x += rel_dx
+            self.__rel_y += rel_dy
+            self.__history.append((rel_dir, self.color(), self.__rel_x, self.__rel_y))
             # print("Moving", direction.Direction(self.__direction), direction.RelativeDirection(rel_dir))
 
     def move_unbound(self):
@@ -158,13 +165,14 @@ class Vehicle:
         Move in a way not bounded by the map edges
         :return: -
         """
-        dir = np.random.randint(low=0, high=3)
-        self.__direction = dir
+        d = direction.RelativeDirection(np.random.randint(low=0, high=3))
+        self.__direction = d
         
-        dx, dy = direction.Direction(dir).xy()
+        dx, dy = direction.Direction(d).xy()
         
-        self.__x = (self.__x+dx) % self.__map.shape[0] # modulus works with negative numbers -1%10 = 9
+        self.__x = (self.__x+dx) % self.__map.shape[0]  # modulus works with negative numbers -1%10 = 9
         self.__y = (self.__y+dy) % self.__map.shape[1]
 
-        rel_dir = (self.__direction - self.__start_direction) % 4
-        self.__history.append((rel_dir, self.color()))
+        rel_dir = direction.RelativeDirection((self.__direction - self.__start_direction) % 4)
+        rel_dx, rel_dy = rel_dir.xy()
+        self.__history.append((rel_dir, self.color(), rel_dx, rel_dy))
