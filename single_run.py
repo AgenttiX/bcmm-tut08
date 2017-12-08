@@ -1,3 +1,5 @@
+import direction
+import graph_utils
 import logger
 import locator
 import mapgrid
@@ -41,6 +43,22 @@ def plot_single_run():
         )
     else:
         log.warning("Location not found!")
+
+    # Graph testing
+    """
+    history_graphs = []
+    for i in range(4):
+        history_graph = graph_utils.history_to_digraph(v.history(), i)
+        history_graphs.append(history_graph)
+
+        graph_utils.digraph_history_analyzer(history_graph)
+
+    map_graph = graph_utils.map_to_digraph(m)
+
+    for i in range(4):
+        match = graph_utils.graph_matcher(map_graph, history_graphs[i])
+        print("Start direction", direction.Direction(i), "graph match:", match)
+    """
 
     plot.show()
 
