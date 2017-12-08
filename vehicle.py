@@ -13,10 +13,11 @@ class Vehicle:
     """
     A vehicle that moves on a map
     """
-    __max_history = 10
 
-    def __init__(self, map_grid: np.ndarray):
+    def __init__(self, map_grid: np.ndarray, max_history=10):
         self.__map = map_grid
+        self.__max_history = max_history
+
         self.__y = np.random.randint(low=0, high=self.__map.shape[0] - 1)
         self.__x = np.random.randint(low=0, high=self.__map.shape[1] - 1)
         self.__rel_y = 0
@@ -175,4 +176,6 @@ class Vehicle:
 
         rel_dir = direction.RelativeDirection((self.__direction - self.__start_direction) % 4)
         rel_dx, rel_dy = rel_dir.xy()
-        self.__history.append((rel_dir, self.color(), rel_dx, rel_dy))
+        self.__rel_x += rel_dx
+        self.__rel_y += rel_dy
+        self.__history.append((rel_dir, self.color(), self.__rel_x, self.__rel_y))

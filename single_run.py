@@ -12,7 +12,7 @@ def plot_single_run():
     width = 10
 
     m = mapgrid.generate_map(width=width, height=height)
-    v = vehicle.Vehicle(m)
+    v = vehicle.Vehicle(m, 10)
 
     plot = plotter.LocatorPlot(v)
     plot.plot_map()
@@ -23,7 +23,7 @@ def plot_single_run():
     log.info("Start location:", str(v.location()))
     log.info("Start color:", v.color())
 
-    for i in range(6):
+    for i in range(10):
         v.move_unbound()
         plot.plot_vehicle()
 
