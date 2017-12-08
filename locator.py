@@ -15,6 +15,9 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
 
     if debug:
         end_x, end_y, end_dir = v.location()
+    else:
+        end_x = -9000
+        end_y = -9000
 
     # print(map)
     log.debug("History:")
