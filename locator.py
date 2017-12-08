@@ -1,15 +1,44 @@
 import color
 import direction
+import logger
 import vehicle
 
 import numpy as np
-import typing
+import time
+import typing as tp
 
-import logger
-log = logger.get_logger(__name__, level="DEBUG", disabled=True)
+log = logger.get_logger(__name__, level="DEBUG", disabled=False)
 
 
-def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typing.Tuple[int, int, int]:
+def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None, skip: tp.Union[int, tp.List[int]] = None) \
+        -> tp.Tuple[int, int, int]:
+    """
+    Vehicle locator algorithm
+    :param m: map (numpy array)
+    :param history: vehicle history (numpy array)
+    :param v: vehicle object for debugging
+    :param skip: skip these indexes
+    :return: number of matches, located x, located y
+    """
+
+    start_time = time.perf_counter()
+
+    skip_list = []
+
+    # Check the skip values
+    if skip is None:
+        pass
+    elif type(skip) is int:
+        skip_list.append(skip)
+    elif type(skip) is list:
+        skip_list.extend(skip)
+    else:
+        raise ValueError("Invalid skip input")
+
+    for index in skip_list:
+        if not 0 <= index < history.shape[0]:
+            raise ValueError("Invalid skip index", index)
+
     # Enable debug output if the vehicle is given
     debug = (v is not None)
 
@@ -19,22 +48,24 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
         end_x = -9000
         end_y = -9000
 
-    # print(map)
     log.debug("History:")
     for y in range(history.shape[0]):
-        log.debug(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]))
+        log.debug(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]), history[y, 2], history[y, 3])
 
-    possible_end_loc = np.equal(m, history[0, 1])
+    if skip_list is not None and 0 in skip_list:
+        possible_start_loc = np.ones(m.shape, dtype=bool)
+    else:
+        possible_start_loc = np.equal(m, history[0, 1])
     possible_loc = np.zeros(m.shape, dtype=bool)
 
     # Iterate map
     for y in range(m.shape[0]):
         for x in range(m.shape[1]):
 
-            # If end location is possible
-            if possible_end_loc[y, x]:
+            # If start location is possible
+            if possible_start_loc[y, x]:
                 if debug:
-                    log.debug("Checking last location (x, y):", x, y)
+                    log.debug("Checking start location (x, y):", x, y)
 
                     if x == end_x and y == end_y:
                         log.debug("----")
@@ -54,8 +85,6 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
 
                     # Iterate history
                     for hist_ind in range(1, history.shape[0]):
-                        # history_dir = direction.RelativeDirection(history[hist_ind, 0])
-                        # relative_dir = history_dir.reverse()
                         relative_dir = direction.RelativeDirection(history[hist_ind, 0])
                         abs_dir = direction.Direction((relative_dir + start_direction) % 4)
 
@@ -83,7 +112,19 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
                             break
                         """
 
-                        if m[check_y, check_x] != history[hist_ind, 1]:
+                        # Skip color checking if the history index is in the skip list
+                        if hist_ind in skip_list:
+                            if debug:
+                                log.debug("Skipped history color",
+                                          hist_ind,
+                                          color.Color(history[hist_ind, 1]),
+                                          "of",
+                                          check_x,
+                                          check_y,
+                                          "which would correctly be",
+                                          color.Color(m[check_y, check_x]))
+                        # Check the color matching (the normal situation)
+                        elif m[check_y, check_x] != history[hist_ind, 1]:
                             if debug:
                                 log.debug(
                                     "History color",
@@ -105,11 +146,14 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None) -> typ
                         log.debug("Found possible loc", x, y)
                         possible_loc[check_y, check_x] = True
 
-    log.debug("Locator results:\n", possible_loc)
+    log.debug("Locator results:\n", possible_loc.astype(int))
     possible_y, possible_x = possible_loc.nonzero()
 
     num_matches = possible_y.size
-    
+
+    location_time = time.perf_counter() - start_time
+    log.debug("Location took", location_time)
+
     if num_matches == 0:
         log.debug("No suitable places found")
         return num_matches, -9999, -9999
