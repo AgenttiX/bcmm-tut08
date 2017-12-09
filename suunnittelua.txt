@@ -1,0 +1,13 @@
+logger vaatii ominaisuuden kytke päälle/pois tässä kyseisessä tiedostossa 
+    loggerin periyttäminen logging luokasta, jolloin se luodaan aina tiedoston alussa, sillä on omat jäsenfunktionsa.
+    
+plotter vaatii funktion plotreitti. (plot_alkusijainti)
+    - se myös vaatii funktion plot found place, tai vastaavasti plot_not_found_here
+    
+//laita mikan founder palauttamaan arvon kuinka monesta paikka se löysi itsensä
+
+Monte Carloa
+    suorita, sanotaan vaikka 10 settiä joista otat keskivirheen
+        testiotoksessa on vaikka se sata suorituskertaa
+    plottaus
+    lue wikipediaa miten asia yleensä hoidetaan

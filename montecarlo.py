@@ -58,7 +58,7 @@ def run_MC(gridsize: int, steps: int, MC_iterations: int, error=False) -> np.nda
 
 
 
-def run_MC_2(gridsize: int, steps: int, MC_iterations: int) -> np.ndarray:
+def run_MC_2(gridsize: int, steps: int, MC_iterations: int, error=0.001) -> np.ndarray:
     """
     Does Monte Carlo-simulation with given parametes.
     Sensitivity and specificity, confusion 4-matrix,
@@ -80,7 +80,7 @@ def run_MC_2(gridsize: int, steps: int, MC_iterations: int) -> np.ndarray:
             v.move_unbound()
         
 
-        num_found_exact, x, y    = locator.locate(v.map(), v.history_error(iteration_for_seed=run_idx))[0:3]
+        num_found_exact, x, y    = locator.locate(v.map(), v.history_error(iteration_for_seed=run_idx, error=error))[0:3]
         num_found_inextact, x, y = locator.locate(v.map(), v.history())[0:3]
         
         true_pos = 0
@@ -108,12 +108,19 @@ def run_MC_2(gridsize: int, steps: int, MC_iterations: int) -> np.ndarray:
 
 
 
-def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed", use_stored_results=False):
+def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed", use_stored_results=False, var_error=False):
     """
     Calulates the confusion matrices (and errorbars) for given arguments.
-    If gridsize or steps value -1 then that value is the one calculated over range
+    Varites either gridsize or steps or error
+    IF gridsize is -1 then variate gridsize over a range
+    IF steps is -1 then variate that
+    IF var_error the variate error
     
     in a nutchell: this function calls 'run_MC_2()' iteratively
+    
+    return
+        x_axis      values for variating value   
+        res_vec     mean and errors of confusion mat, see below
     """
     # res_vec (result vector) dimensions: 
     #       0: variating value, ~10-20
@@ -147,9 +154,17 @@ def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed"
             res_vec = np.zeros((len(steps_vec),2,2,2))
             
             for i, st in enumerate(steps_vec):
-                res_vec[i,:,:,:] = run_MC_2(gridsize, st, iterations)
+                res_vec[i,:,:,:] = run_MC_2(gridsize, steps, iterations)
                 log.debug("    Process:", str(i+1)+"/"+str(len(steps_vec)), " steps", st)
         
+        elif var_error:
+            err_vec = np.logspace(-4,0,10)
+            x_axis = err_vec
+            res_vec = np.zeros((len(err_vec),2,2,2))
+            
+            for i, er in enumerate(err_vec):
+                res_vec[i,:,:,:] = run_MC_2(gridsize, steps, iterations, error=er)
+                log.debug("    Process:", str(i+1)+"/"+str(len(err_vec)), " error", er)
         else:
             raise Exception("You have to variate gridsize or steps, set that value to -1 to do that")
         
@@ -162,6 +177,8 @@ def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed"
             x_axis = np.arange(10,60,5)
         elif steps == -1:
             x_axis = np.arange(1,10+1)
+        elif var_error:
+            x_axis = np.logspace(-4,-1,10)
         else:
             raise Exception("You have to variate gridsize or steps, set that value to -1 to do that")
         
@@ -173,6 +190,29 @@ def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed"
     return x_axis, res_vec
 
 
+def calc_TPR_TNR_ACC(res_vec, iterations):
+    """
+    Calulates the TPR TNR ACC
+    """
+    
+    TP = res_vec[:,0,0,0] * iterations
+    FN = res_vec[:,0,1,0] * iterations
+    FP = res_vec[:,0,0,1] * iterations
+    TN = res_vec[:,0,1,1] * iterations
+
+    TP_err = res_vec[:,1,0,0] * iterations
+    FN_err = res_vec[:,1,1,0] * iterations
+    FP_err = res_vec[:,1,0,1] * iterations
+    TN_err = res_vec[:,1,1,1] * iterations
+    
+    TPR = TP / (TP+FN)
+    # SPC is it same as TNR?
+    TNR = TN / (TN + FP)
+    AAC = (TP + TN) / (TP + FN + TN + FP)
+
+    return TPR, TNR, AAC
+
+
 
 def create_directory_if_it_doesnt_exist_already(directory:str):
     if not os.path.exists(directory):
@@ -180,24 +220,45 @@ def create_directory_if_it_doesnt_exist_already(directory:str):
 
 
 
-def plot_classification_and_erros(iterations=10, use_stored_results=False):
+def plot_classification_and_erros(iterations=1000, use_stored_results=False, map_steps_err=[True, True, True]):
     """
-    Confusion matrix things
+    Confusion matrix calulations and plots, "herkkyysanalyysi" in english.
     """
+    # map
+    if map_steps_err[0]:
+        x_axis_map, var_map = calc_confusion_mat(
+                gridsize=-1, steps=10, iterations=iterations, dirname="variate_map", use_stored_results=use_stored_results)
+        
+        plotter.plot_conf_mat(x_axis_map, var_map, xlabel="kartan koko")#, ylim=(0,1))
+        
+        TPR_gs, TNR_gs, AAC_gs = calc_TPR_TNR_ACC(var_map, iterations)
+        plotter.plot_TPR_TNR_ACC(x_axis_map, TPR_gs, TNR_gs, AAC_gs, xlabel="kartan koko", ylim=None)
+        
+    # steps
+    if map_steps_err[1]:
+        x_axis_steps, var_steps = calc_confusion_mat(
+                gridsize=20, steps=-1, iterations=iterations, dirname="variate_steps", use_stored_results=use_stored_results)
+        
+        plotter.plot_conf_mat(x_axis_steps, var_steps, xlabel="askelten lukumäärä")#, ylim=(0,1))
+        
+        TPR_st, TNR_st, AAC_st = calc_TPR_TNR_ACC(var_steps, iterations)
+        plotter.plot_TPR_TNR_ACC(x_axis_steps, TPR_st, TNR_st, AAC_st, xlabel="askelten lukumäärä", ylim=None)
+        
+    if map_steps_err[2]:
+        x_axis_err, var_err = calc_confusion_mat(
+                gridsize=20, steps=10, iterations=iterations, dirname="variate_error", use_stored_results=use_stored_results, var_error=True)
+        plotter.plot_conf_mat(x_axis_err, var_err, xlabel="havaintovirhe", log_scale=True)
+        
+        TPR_er, TNR_er, AAC_er = calc_TPR_TNR_ACC(var_err, iterations)
+        plotter.plot_TPR_TNR_ACC(x_axis_err, TPR_er, TNR_er, AAC_er, xlabel="havaintovirhe", ylim=None, log_scale=True)
     
-    x_axis_map, var_map = calc_confusion_mat(
-            gridsize=-1, steps=10, iterations=iterations, dirname="variate_map", use_stored_results=use_stored_results)
-    x_axis_steps, var_steps = calc_confusion_mat(
-            gridsize=20, steps=-1, iterations=iterations, dirname="variate_steps", use_stored_results=use_stored_results)
     
-    plotter.plot_conf_mat(x_axis_map, var_map, xlabel="kartan koko")#, ylim=(0,1))
-    plotter.plot_conf_mat(x_axis_steps, var_steps, xlabel="askelten lukumäärä")#, ylim=(0,1))
     
     plt.show()
     
-def single_four_table(iterations=100):
+def single_four_table(iterations=1000):
     """
-    Confusion matrix things, single calculation
+    Confusion matrix things, single calculation, print values
     """
     
     mat = run_MC_2(20, 10, iterations)
@@ -208,14 +269,26 @@ def single_four_table(iterations=100):
     # lazy latex table
     for i in [0,1]:
         for j in [0,1]:
-            m = str(round(mean[i,j], 5))
-            e = str(round(err[i,j], 3))
+            m = str(mean[i,j])
+            e = str(err[i,j])
             print("${} \pm {}$".format(m, e), end="")
             
             if j != 1:
                 print(" & ", end="")
             else:
                 print(" \\\\")
+    
+    TP = mat[0,0,0]
+    FN = mat[0,1,0]
+    FP = mat[0,0,1]
+    TN = mat[0,1,1]
+    
+    TPR = TP / (TP+FN)
+    # SPC is it same as TNR?
+    TNR = TN / (TN + FP)
+    AAC = (TP + TN) / (TP + FN + TN + FP)
+    
+    print("TPR", TPR, "TNR", TNR, "AAC", AAC)
     
     # TP_mean = mat[0,0,0]
     # FN_mean = mat[0,1,0]
