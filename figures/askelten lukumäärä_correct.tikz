@@ -1,8 +1,8 @@
 % This file was created by matplotlib2tikz v0.6.14.
 \begin{tikzpicture}
 
-\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
 \definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
 
 \begin{axis}[
 xlabel={askelten lukumäärä},
@@ -11,13 +11,13 @@ xmin=0.55, xmax=10.45,
 ymin=-0.05, ymax=1.05,
 tick align=outside,
 tick pos=left,
-x grid style={lightgray!92.026143790849673!black},
-y grid style={lightgray!92.026143790849673!black}
+x grid style={white!69.019607843137251!black},
+y grid style={white!69.019607843137251!black}
 ,
 legend entries={{TP},{TN}},
 legend cell align={right},
 legend style={draw=white!80.0!black},
-legend style={at={(0.03,1.03)},anchor=south west}
+legend style={at={(0.1,1.03)},anchor=south west}
 ]  % replace the ending bracket
 \addlegendimage{no markers, color0}
 \addlegendimage{no markers, color1}%]

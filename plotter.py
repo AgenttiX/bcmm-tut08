@@ -306,7 +306,7 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1, num_runs)
         plt.savefig('figures/steps_incorrect_result.pgf')
 
 
-def plot_conf_mat(x_axis, mat, xlabel="", ylim=None):
+def plot_conf_mat(x_axis, mat, xlabel="", ylim=None, log_scale=False):
     # Labels 
     TP_l = "TP"
     FN_l = "FN"
@@ -325,6 +325,9 @@ def plot_conf_mat(x_axis, mat, xlabel="", ylim=None):
     
     
     fig_corr = plt.figure(xlabel+" Correct precentages TP, TN")
+    
+    if log_scale:
+        fig_corr.gca().set_xscale("log", nonposx='clip')
         
     plt.errorbar(x_axis, TP_mean, yerr=TP_err, capsize=4, label=TP_l)
     plt.errorbar(x_axis, TN_mean, yerr=TN_err, capsize=4, label=TN_l)
@@ -335,6 +338,8 @@ def plot_conf_mat(x_axis, mat, xlabel="", ylim=None):
             
     
     fig_incorr = plt.figure(xlabel+" Incorrect precentages FN, FP")
+    if log_scale:
+        fig_incorr.gca().set_xscale("log", nonposx='clip')
     
     plt.errorbar(x_axis, FN_mean, yerr=FN_err, capsize=4, label=FN_l)
     plt.errorbar(x_axis, FP_mean, yerr=FP_err, capsize=4, label=FP_l)
@@ -376,8 +381,27 @@ def plot_conf_mat(x_axis, mat, xlabel="", ylim=None):
         
         fig_corr.savefig(save_name_corr + '.pgf')
         fig_incorr.savefig(save_name_incorr + '.pgf')
+
+
+def plot_TPR_TNR_ACC(x_axis, TPR, TNR, AAC, xlabel="", ylim=None, log_scale=False):
     
+    fig = plt.figure(xlabel+" TPR, TNR, AAC")
+    if log_scale:
+        fig.gca().set_xscale("log", nonposx='clip')
+        
+    plt.plot(x_axis, TPR, label="TPR")
+    plt.plot(x_axis, TNR, label="TNR")
+    plt.plot(x_axis, AAC, label="AAC")
     
+    plt.xlabel(xlabel)
+    plt.ylabel("P")
+    plt.ylim(ylim)
+    
+    plt.legend()
+    
+    block_print()
+    tikz_save("figures/"+xlabel[0:6] + '_TPR_TNR_ACC.tikz')
+    enable_print()
     
     
         

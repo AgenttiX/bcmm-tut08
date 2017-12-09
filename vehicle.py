@@ -87,7 +87,7 @@ class Vehicle:
         return arr
     """
     
-    def history_error(self, iteration_for_seed) -> np.ndarray:
+    def history_error(self, iteration_for_seed, error: float=0.001) -> np.ndarray:
         """
         Get movement history that has measurement error in it. 
         So therefore it might flip one value out of 10 by change 1%, and two values by 
@@ -112,7 +112,7 @@ class Vehicle:
         # id(object) gives only like two different values
         # --> python uses same memory addresses for object in loop re-initialization
         rnd_colors = np.random.randint(3, size=self.__max_history)+1  # Note: error can not be same color (so therefore 1,2,3)
-        rnd_prob = (np.random.random(self.__max_history) < 0.001).astype(int)  # vector [0,0,...0,1,0,..0]
+        rnd_prob = (np.random.random(self.__max_history) < error).astype(int)  # vector [0,0,...0,1,0,..0]
         np.random.seed(None)
 
         # altered_history

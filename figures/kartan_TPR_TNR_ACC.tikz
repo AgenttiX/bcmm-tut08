@@ -1,0 +1,65 @@
+% This file was created by matplotlib2tikz v0.6.14.
+\begin{tikzpicture}
+
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+
+\begin{axis}[
+xlabel={kartan koko},
+ylabel={P},
+xmin=7.75, xmax=57.25,
+ymin=0.990009282896264, ymax=1.00047574843351,
+tick align=outside,
+tick pos=left,
+x grid style={white!69.019607843137251!black},
+y grid style={white!69.019607843137251!black},
+legend style={at={(0.91,0.5)}, anchor=east, draw=white!80.0!black},
+legend cell align={left},
+legend entries={{TPR},{TNR},{AAC}}
+]
+\addlegendimage{no markers, color0}
+\addlegendimage{no markers, color1}
+\addlegendimage{no markers, color2}
+\addplot [semithick, color0]
+table {%
+10 0.99144757681343
+15 0.990975318038491
+20 0.991135547576302
+25 0.990485031329775
+30 0.99101581217058
+35 0.990508305232921
+40 0.991424548828875
+45 0.991712337922738
+50 0.991552416562803
+55 0.990811422109132
+};
+\addplot [semithick, color1]
+table {%
+10 1
+15 0.998754669987547
+20 1
+25 0.998552821997106
+30 0.99818401937046
+35 0.999498243853487
+40 1
+45 0.999603017070266
+50 1
+55 0.999316473000683
+};
+\addplot [semithick, color2]
+table {%
+10 0.9919
+15 0.9916
+20 0.9921
+25 0.9916
+30 0.9922
+35 0.9923
+40 0.9933
+45 0.9937
+50 0.9939
+55 0.9933
+};
+\end{axis}
+
+\end{tikzpicture}
