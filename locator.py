@@ -48,9 +48,10 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None, skip: 
         end_x = -9000
         end_y = -9000
 
-    log.debug("History:")
-    for y in range(history.shape[0]):
-        log.debug(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]), history[y, 2], history[y, 3])
+    if debug:
+        log.debug("History:")
+        for y in range(history.shape[0]):
+            log.debug(direction.RelativeDirection(history[y, 0]), color.Color(history[y, 1]), history[y, 2], history[y, 3])
 
     if (skip_list is not None) and (0 in skip_list):
         possible_start_loc = np.ones(m.shape, dtype=bool)
@@ -204,3 +205,49 @@ def locate_with_one_possible_error(m: np.ndarray, history: np.ndarray, v: vehicl
         loc_y = -9999
 
     return num_matches, loc_x, loc_y, possible_total_loc
+
+
+def locate_with_error_fallback(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None):
+    """
+    Try locating with the primary algorithm and fall back to the algorithm that can handle errors if necessary
+    :param m: map (numpy array)
+    :param history: vehicle history (numpy array)
+    :param v: vehicle for debugging purposes
+    :return: number of possible locations, loc_x, loc_y, array of possible locations
+    """
+    num_matches, x, y, possible_loc = locate(m, history, v=v)
+
+    if num_matches == 0:
+        log.debug("No possible locations found, so the history has errors. Falling back to the error handling version.")
+        num_matches, x, y, possible_loc = locate_with_one_possible_error(m, history, v=v)
+
+    return num_matches, x, y, possible_loc
+
+
+def locate_with_movement_and_error_fallback(m: np.ndarray, history_method: callable, v: vehicle.Vehicle, retries: int):
+    """
+    DOES NOT WORK YET. Would require the vehicle to continuously generate a history with errors.
+
+    Try locating with the primary algorithm and fall back to the algorithm that can handle errors if necessary.
+    If this doesn't help, move the vehicle.
+    :param m: map (numpy array)
+    :param history_method: vehicle history (numpy array)
+    :param v: vehicle for debugging purposes
+    :param retries: how many times the vehicle should be moved and relocated if the previous attempts fail
+    :return: number of possible locations, loc_x, loc_y, array of possible locations
+    """
+    if not retries > 1:
+        raise ValueError("Invalid retry count")
+
+    num_matches, x, y, possible_loc = locate_with_error_fallback(m, history_method())
+
+    movement_count = 0
+    for movement_count in range(retries+1):
+        if num_matches == 1:
+            break
+        else:
+            log.debug("Locating did not succeed. Moving the vehicle.")
+            v.move_unbound()
+        num_matches, x, y, possible_loc = locate_with_error_fallback(m, history_method)
+
+    return num_matches, x, y, possible_loc, movement_count

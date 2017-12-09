@@ -64,6 +64,10 @@ def plot_single_run():
     # History error handling test
     locator.locate_with_one_possible_error(v.map(), v.history())
     locator.locate_with_one_possible_error(v.map(), v.history_error_one())
+    locator.locate_with_error_fallback(v.map(), v.history())
+    locator.locate_with_error_fallback(v.map(), v.history_error_one())
+    # locator.locate_with_movement_and_error_fallback(v.map(), v.history(), v, retries=10)
+    # locator.locate_with_movement_and_error_fallback(v.map(), v.history_error_one(), v, retries=10)
 
     plot.show()
 
