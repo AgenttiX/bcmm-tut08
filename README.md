@@ -19,7 +19,7 @@ Files
 - mapgrid.py
   - generator for maps
 - montecarlo.py
-  - a set of simulations based on the [Monte-Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method)
+  - a set of simulations based on the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method)
 - plotter.py
   - a plotting interface for maps and vehicles
 - **single_run.py**
