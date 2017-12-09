@@ -79,7 +79,7 @@ def write_lines(filename, contains, insert_this):
             break
 
     with open(filename, 'w') as file:
-        file.writelines( data )
+        file.writelines(data)
 
 
 def fix_labels_in_tikz(*labels) -> str:
@@ -126,7 +126,7 @@ def fix_labels_in_tikz(*labels) -> str:
     return insertion
 
 
-def tikz_save_with_labels(pathname,labels):
+def tikz_save_with_labels(pathname, labels):
     
     block_print()
     tikz_save(pathname)
@@ -306,7 +306,7 @@ def plot_steps_error(steps0, single_matches0, steps1, single_matches1, num_runs)
         plt.savefig('figures/steps_incorrect_result.pgf')
 
 
-def plot_conf_mat(x_axis, mat, xlabel="", ylim=(0,1)):
+def plot_conf_mat(x_axis, mat, xlabel="", ylim=None):
     # Labels 
     TP_l = "TP"
     FN_l = "FN"
@@ -323,30 +323,60 @@ def plot_conf_mat(x_axis, mat, xlabel="", ylim=(0,1)):
     FP_err = mat[:,1,0,1]
     TN_err = mat[:,1,1,1]
     
-    plt.figure(xlabel)
     
+    fig_corr = plt.figure(xlabel+" Correct precentages TP, TN")
+        
     plt.errorbar(x_axis, TP_mean, yerr=TP_err, capsize=4, label=TP_l)
-    plt.errorbar(x_axis, FN_mean, yerr=FN_err, capsize=4, label=FN_l)
-    plt.errorbar(x_axis, FP_mean, yerr=FP_err, capsize=4, label=FP_l)
     plt.errorbar(x_axis, TN_mean, yerr=TN_err, capsize=4, label=TN_l)
     
     plt.xlabel(xlabel)
     plt.ylabel("P")
     plt.ylim(ylim)
+            
+    
+    fig_incorr = plt.figure(xlabel+" Incorrect precentages FN, FP")
+    
+    plt.errorbar(x_axis, FN_mean, yerr=FN_err, capsize=4, label=FN_l)
+    plt.errorbar(x_axis, FP_mean, yerr=FP_err, capsize=4, label=FP_l)
+
+    plt.xlabel(xlabel)
+    plt.ylabel("P")
+    plt.ylim(ylim)
+    
+    save_name_corr = 'figures/' + xlabel+"_correct"
+    save_name_incorr = 'figures/' + xlabel+"_incorrect"
     
     if not plt2tikZ_is_crappy:
         block_print()
-        tikz_save('figures/' + xlabel + '.tikz')
+        
+        plt.figure(xlabel+" Correct precentages TP, TN")
+        tikz_save(save_name_corr + '.tikz')
+        plt.legend()
+        
+        plt.figure(xlabel+" Incorrect precentages FN, FP")
+        tikz_save(save_name_incorr + '.tikz')
+        plt.legend()
+        
         enable_print()
         
-        log.debug("Adding lines to file 'figures/' + xlabel + '.tikz' after 'begin{axis}['" + "\n")
+        
+        log.debug("Adding lines to files '" + 'figures/' + xlabel + "_XXX.tikz' after 'begin{axis}['" + "\n")
                  
-        add_label = fix_labels_in_tikz(TP_l,FN_l,FP_l,TN_l)
-        write_lines('figures/steps.tikz', "y grid style", add_label)
+        add_label_corr = fix_labels_in_tikz(TP_l, TN_l)
+        add_label_incorr = fix_labels_in_tikz(FN_l, FP_l)
+        write_lines(save_name_corr + '.tikz', "y grid style", add_label_corr)
+        write_lines(save_name_incorr + '.tikz', "y grid style", add_label_incorr)
+
     else:
-        plt.savefig('figures/steps.pgf')
+        plt.figure(xlabel+" Correct precentages TP, TN")
+        plt.legend()
+        
+        plt.figure(xlabel+" Incorrect precentages FN, FP")
+        plt.legend()
+        
+        fig_corr.savefig(save_name_corr + '.pgf')
+        fig_incorr.savefig(save_name_incorr + '.pgf')
     
-    plt.legend()
     
     
     

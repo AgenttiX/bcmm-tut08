@@ -12,10 +12,10 @@ import typing as tp
 import logger
 log = logger.get_logger(__name__, level="DEBUG", disabled=False, colors=True)
 
-#import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
-def run_MC(gridsize:int, steps:int, MC_iterations:int, error=False) -> np.ndarray:
+def run_MC(gridsize: int, steps: int, MC_iterations: int, error=False) -> np.ndarray:
     """
     Does Monte Carlo-simulation with given parametes.
     """
@@ -35,13 +35,13 @@ def run_MC(gridsize:int, steps:int, MC_iterations:int, error=False) -> np.ndarra
             v.move_unbound()
         
         if error:
-            num_found, x, y = locator.locate(v.map(), v.history_error(iteration_for_seed=run_idx))
+            num_found, x, y = locator.locate(v.map(), v.history_error(iteration_for_seed=run_idx))[0:3]
         else:
-            num_found, x, y = locator.locate(v.map(), v.history())
+            num_found, x, y = locator.locate(v.map(), v.history())[0:3]
             
         if num_found == 1:
             loc_x, loc_y, dir = v.location()
-            if ((x==loc_x) and (y==loc_y)):
+            if ((x == loc_x) and (y == loc_y)):
                 numFound_correct += 1
             else:
                 numFound_incorrect += 1
@@ -52,13 +52,13 @@ def run_MC(gridsize:int, steps:int, MC_iterations:int, error=False) -> np.ndarra
         
         
     log.debug("    correct match:{:7.3f}".format(numFound_correct/(MC_iterations)) + \
-                 ",  incorrect match:{:7.3f}".format(numFound_incorrect/(MC_iterations)) ) 
+              ",  incorrect match:{:7.3f}".format(numFound_incorrect/(MC_iterations)) ) 
     
-    return np.array((numFound_correct/MC_iterations, numFound_incorrect/MC_iterations, numNotFound/MC_iterations ))
+    return np.array((numFound_correct/MC_iterations, numFound_incorrect/MC_iterations, numNotFound/MC_iterations))
 
 
 
-def run_MC_2(gridsize:int, steps:int, MC_iterations:int) -> np.ndarray:
+def run_MC_2(gridsize: int, steps: int, MC_iterations: int) -> np.ndarray:
     """
     Does Monte Carlo-simulation with given parametes.
     Sensitivity and specificity, confusion 4-matrix,
@@ -66,13 +66,8 @@ def run_MC_2(gridsize:int, steps:int, MC_iterations:int) -> np.ndarray:
     return 2*2*2 np.ndarray, in which [0,:,:] is mean values and [1,:,:] is error
     """
     
-    true_pos = 0
-    true_neg = 0
-    false_pos = 0
-    false_neg = 0
-    
     # all confusion matrices (like ...0100,0010...)
-    results_mat = np.zeros((MC_iterations,2,2), dtype=int)
+    results_mat = np.zeros((MC_iterations, 2, 2), dtype=int)
     
     height = gridsize
     width = gridsize
@@ -85,8 +80,13 @@ def run_MC_2(gridsize:int, steps:int, MC_iterations:int) -> np.ndarray:
             v.move_unbound()
         
 
-        num_found_exact, x, y    = locator.locate(v.map(), v.history_error(iteration_for_seed=run_idx))
-        num_found_inextact, x, y = locator.locate(v.map(), v.history())
+        num_found_exact, x, y    = locator.locate(v.map(), v.history_error(iteration_for_seed=run_idx))[0:3]
+        num_found_inextact, x, y = locator.locate(v.map(), v.history())[0:3]
+        
+        true_pos = 0
+        true_neg = 0
+        false_pos = 0
+        false_neg = 0
         
         if (num_found_exact == 1) and (num_found_inextact == 1):
             true_pos += 1
@@ -97,7 +97,7 @@ def run_MC_2(gridsize:int, steps:int, MC_iterations:int) -> np.ndarray:
         elif (num_found_exact != 1) and (num_found_inextact == 1):
             false_pos += 1
         
-        confusion_mat = np.ndarray(((true_pos,false_neg), (false_pos,true_neg)))
+        confusion_mat = np.array(((true_pos, false_neg), (false_pos, true_neg)))
         results_mat[run_idx,:,:] = confusion_mat
     
     #confusion mat
@@ -112,6 +112,8 @@ def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed"
     """
     Calulates the confusion matrices (and errorbars) for given arguments.
     If gridsize or steps value -1 then that value is the one calculated over range
+    
+    in a nutchell: this function calls 'run_MC_2()' iteratively
     """
     # res_vec (result vector) dimensions: 
     #       0: variating value, ~10-20
@@ -125,16 +127,9 @@ def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed"
     create_directory_if_it_doesnt_exist_already(dir_base)
     filename = dir_base+"/gs"+str(gridsize)+"_st"+str(steps)+".npy"
     
-    if not use_stored_results:        
-        for i, gs in enumerate(gridsizes):
-            log.debug("Process:", str(i)+"/"+str(len(gridsizes)-1), " gridsize:", gs)
-            
-            found_one[run_idx,i,:]= run_MC(gs, steps, iterations, error=error)
+    if not use_stored_results:
         
-        dir = "calulated_results/var_map_size__itr"+str(iterations)+"_st"+str(steps)+"_err"+str(int(error))
-        create_directory_if_it_doesnt_exist_already(dir)
-        np.save(dir+"/idx"+str(run_idx)+".npy", found_one[run_idx,:,:])
-
+        log.debug("Number of Monte Carlo iterations with every calulation: "+ str(iterations))
 
         if gridsize == -1:
             gridsize_vec = np.arange(10,60,5)
@@ -143,6 +138,7 @@ def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed"
             
             for i, gs in enumerate(gridsize_vec):
                 res_vec[i,:,:,:] = run_MC_2(gs, steps, iterations)
+                log.debug("    Process:", str(i+1)+"/"+str(len(gridsize_vec)), " gridsize:", gs)
             
 
         elif steps == -1:
@@ -152,18 +148,147 @@ def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed"
             
             for i, st in enumerate(steps_vec):
                 res_vec[i,:,:,:] = run_MC_2(gridsize, st, iterations)
+                log.debug("    Process:", str(i+1)+"/"+str(len(steps_vec)), " steps", st)
+        
+        else:
+            raise Exception("You have to variate gridsize or steps, set that value to -1 to do that")
         
         
         np.save(filename, res_vec)
                 
     # get pre calculated data
     else:
-        if not os.path.exists(dir_base):
+        if gridsize == -1:
+            x_axis = np.arange(10,60,5)
+        elif steps == -1:
+            x_axis = np.arange(1,10+1)
+        else:
+            raise Exception("You have to variate gridsize or steps, set that value to -1 to do that")
+        
+        if not os.path.isfile(filename):
             raise Exception("No calulations exists (yet) with these parameters")
         
         res_vec = np.load(filename)
     
     return x_axis, res_vec
+
+
+
+def create_directory_if_it_doesnt_exist_already(directory:str):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+
+
+def plot_classification_and_erros(iterations=10, use_stored_results=False):
+    """
+    Confusion matrix things
+    """
+    
+    x_axis_map, var_map = calc_confusion_mat(
+            gridsize=-1, steps=10, iterations=iterations, dirname="variate_map", use_stored_results=use_stored_results)
+    x_axis_steps, var_steps = calc_confusion_mat(
+            gridsize=20, steps=-1, iterations=iterations, dirname="variate_steps", use_stored_results=use_stored_results)
+    
+    plotter.plot_conf_mat(x_axis_map, var_map, xlabel="kartan koko")#, ylim=(0,1))
+    plotter.plot_conf_mat(x_axis_steps, var_steps, xlabel="askelten lukumäärä")#, ylim=(0,1))
+    
+    plt.show()
+    
+def single_four_table(iterations=100):
+    """
+    Confusion matrix things, single calculation
+    """
+    
+    mat = run_MC_2(20, 10, iterations)
+    
+    mean = mat[0,:,:]
+    err = mat[1,:,:]
+    
+    # lazy latex table
+    for i in [0,1]:
+        for j in [0,1]:
+            m = str(round(mean[i,j], 5))
+            e = str(round(err[i,j], 3))
+            print("${} \pm {}$".format(m, e), end="")
+            
+            if j != 1:
+                print(" & ", end="")
+            else:
+                print(" \\\\")
+    
+    # TP_mean = mat[0,0,0]
+    # FN_mean = mat[0,1,0]
+    # FP_mean = mat[0,0,1]
+    # TN_mean = mat[0,1,1]
+    
+    # TP_err = mat[1,0,0]
+    # FN_err = mat[1,1,0]
+    # FP_err = mat[1,0,1]
+    # TN_err = mat[1,1,1]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# These are old functions and not used anymore. They work well, so they are not removed.
+
+def plot_monte_carlos(num_runs=20, iterations=1000, use_stored_results=[True,True]):
+    
+    # first with no error
+
+    gridsizes_0, Prob_MC_matrix_gs_0 = calc_curves_gridsizes(steps=10, 
+                                                                        num_runs=num_runs, 
+                                                                        iterations=iterations, 
+                                                                        use_stored_results=use_stored_results[0],
+                                                                        error=False)
+
+    steps_0, Prob_MC_matrix_st_0 = calc_curves_steps(gridsize=20, 
+                                                                num_runs=num_runs, 
+                                                                iterations=iterations, 
+                                                                use_stored_results=use_stored_results[0], 
+                                                                error=False)
+                                                                
+    
+    # then with 0.001 error in measurement of color
+    gridsizes_1, Prob_MC_matrix_gs_1 = calc_curves_gridsizes(steps=10, 
+                                                                        num_runs=num_runs, 
+                                                                        iterations=iterations, 
+                                                                        use_stored_results=use_stored_results[1], 
+                                                                        error=True)
+    steps_1, Prob_MC_matrix_st_1 = calc_curves_steps(gridsize=20, 
+                                                                num_runs=num_runs, 
+                                                                iterations=iterations, 
+                                                                use_stored_results=use_stored_results[1], 
+                                                                error=True)
+    
+    plotter.plot_gridsizes_error(gridsizes_0, Prob_MC_matrix_gs_0, gridsizes_1, Prob_MC_matrix_gs_1, num_runs)
+    plotter.plot_steps_error(steps_0, Prob_MC_matrix_st_0, steps_1, Prob_MC_matrix_st_1, num_runs)
+    
+    plt.show()
 
 
 def calc_curves_gridsizes(steps=10, num_runs=10, iterations=1000, plot=True, use_stored_results=False, error=False) \
@@ -257,10 +382,6 @@ def calc_curves_steps(gridsize=20, num_runs=10, iterations=1000, plot=True, use_
     
     return steps, found_one
 
-
-def create_directory_if_it_doesnt_exist_already(directory:str):
-    if not os.path.exists(directory):
-        os.makedirs(directory)
 
 
 def log_stuff():

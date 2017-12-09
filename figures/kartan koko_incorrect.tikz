@@ -1,0 +1,164 @@
+% This file was created by matplotlib2tikz v0.6.14.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+
+\begin{axis}[
+xlabel={kartan koko},
+ylabel={P},
+xmin=7.75, xmax=57.25,
+ymin=-0.000714916645612261, ymax=0.0150132495578575,
+tick align=outside,
+tick pos=left,
+x grid style={lightgray!92.026143790849673!black},
+y grid style={lightgray!92.026143790849673!black}
+,
+legend entries={{FN},{FP}},
+legend cell align={right},
+legend style={draw=white!80.0!black},
+legend style={at={(0.03,1.03)},anchor=south west}
+]  % replace the ending bracket
+\addlegendimage{no markers, color0}
+\addlegendimage{no markers, color1}%]
+\path [draw=color0, semithick] (axis cs:10,0.00770166708775478)
+--(axis cs:10,0.0142983329122452);
+
+\path [draw=color0, semithick] (axis cs:15,0.00518290930213455)
+--(axis cs:15,0.0108170906978654);
+
+\path [draw=color0, semithick] (axis cs:20,0.00601353051246125)
+--(axis cs:20,0.0119864694875387);
+
+\path [draw=color0, semithick] (axis cs:25,0.00436352508071857)
+--(axis cs:25,0.00963647491928143);
+
+\path [draw=color0, semithick] (axis cs:30,0.00770166708775478)
+--(axis cs:30,0.0142983329122452);
+
+\path [draw=color0, semithick] (axis cs:35,0.00436352508071857)
+--(axis cs:35,0.00963647491928143);
+
+\path [draw=color0, semithick] (axis cs:40,0.00601353051246126)
+--(axis cs:40,0.0119864694875387);
+
+\path [draw=color0, semithick] (axis cs:45,0.00276952919768046)
+--(axis cs:45,0.00723047080231954);
+
+\path [draw=color0, semithick] (axis cs:50,0.00601353051246126)
+--(axis cs:50,0.0119864694875387);
+
+\path [draw=color0, semithick] (axis cs:55,0.00355786978234166)
+--(axis cs:55,0.00844213021765834);
+
+\path [draw=color1, semithick] (axis cs:10,0)
+--(axis cs:10,0);
+
+\path [draw=color1, semithick] (axis cs:15,0)
+--(axis cs:15,0);
+
+\path [draw=color1, semithick] (axis cs:20,0)
+--(axis cs:20,0);
+
+\path [draw=color1, semithick] (axis cs:25,0)
+--(axis cs:25,0);
+
+\path [draw=color1, semithick] (axis cs:30,0)
+--(axis cs:30,0);
+
+\path [draw=color1, semithick] (axis cs:35,0)
+--(axis cs:35,0);
+
+\path [draw=color1, semithick] (axis cs:40,0)
+--(axis cs:40,0);
+
+\path [draw=color1, semithick] (axis cs:45,0.000587201359004053)
+--(axis cs:45,0.00341279864099595);
+
+\path [draw=color1, semithick] (axis cs:50,0)
+--(axis cs:50,0);
+
+\path [draw=color1, semithick] (axis cs:55,0)
+--(axis cs:55,0);
+
+\addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
+table {%
+10 0.00770166708775478
+15 0.00518290930213455
+20 0.00601353051246125
+25 0.00436352508071857
+30 0.00770166708775478
+35 0.00436352508071857
+40 0.00601353051246126
+45 0.00276952919768046
+50 0.00601353051246126
+55 0.00355786978234166
+};
+\addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
+table {%
+10 0.0142983329122452
+15 0.0108170906978654
+20 0.0119864694875387
+25 0.00963647491928143
+30 0.0142983329122452
+35 0.00963647491928143
+40 0.0119864694875387
+45 0.00723047080231954
+50 0.0119864694875387
+55 0.00844213021765834
+};
+\addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
+table {%
+10 0
+15 0
+20 0
+25 0
+30 0
+35 0
+40 0
+45 0.000587201359004053
+50 0
+55 0
+};
+\addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
+table {%
+10 0
+15 0
+20 0
+25 0
+30 0
+35 0
+40 0
+45 0.00341279864099595
+50 0
+55 0
+};
+\addplot [semithick, color0, forget plot]
+table {%
+10 0.011
+15 0.008
+20 0.009
+25 0.007
+30 0.011
+35 0.007
+40 0.009
+45 0.005
+50 0.009
+55 0.006
+};
+\addplot [semithick, color1, forget plot]
+table {%
+10 0
+15 0
+20 0
+25 0
+30 0
+35 0
+40 0
+45 0.002
+50 0
+55 0
+};
+\end{axis}
+
+\end{tikzpicture}

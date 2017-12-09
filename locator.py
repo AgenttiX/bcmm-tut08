@@ -7,7 +7,7 @@ import numpy as np
 import time
 import typing as tp
 
-log = logger.get_logger(__name__, level="DEBUG", disabled=False)
+log = logger.get_logger(__name__, level="DEBUG", disabled=True)
 
 
 def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None, skip: tp.Union[int, tp.List[int]] = None) \

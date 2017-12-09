@@ -89,7 +89,9 @@ class Vehicle:
     
     def history_error(self, iteration_for_seed) -> np.ndarray:
         """
-        Get movement history that has a single measurement error in it.
+        Get movement history that has measurement error in it. 
+        So therefore it might flip one value out of 10 by change 1%, and two values by 
+        chance 0.01% (or something similar).
         
         This uses unique id of the vehicle-object as a seed for random generator, so it is
         allowed to call this method more than once in a single lifetime.
