@@ -7,7 +7,7 @@ import numpy as np
 import time
 import typing as tp
 
-log = logger.get_logger(__name__, level="DEBUG", disabled=True)
+log = logger.get_logger(__name__, level="DEBUG", disabled=False)
 
 
 def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None, skip: tp.Union[int, tp.List[int]] = None) \
@@ -175,7 +175,7 @@ def locate_with_one_possible_error(m: np.ndarray, history: np.ndarray, v: vehicl
     :param m: map (numpy array)
     :param history: vehicle history (numpy array)
     :param v: vehicle for debugging purposes
-    :return:
+    :return: number of possible locations, loc_x, loc_y, array of possible locations
     """
     start_time = time.perf_counter()
     possible_total_loc = np.zeros(m.shape)
