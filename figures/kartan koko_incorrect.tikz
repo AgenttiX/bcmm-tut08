@@ -8,7 +8,7 @@
 xlabel={kartan koko},
 ylabel={P},
 xmin=7.75, xmax=57.25,
-ymin=-0.000714916645612261, ymax=0.0150132495578575,
+ymin=-0.00046036273250147, ymax=0.00966761738253086,
 tick align=outside,
 tick pos=left,
 x grid style={lightgray!92.026143790849673!black},
@@ -21,143 +21,143 @@ legend style={at={(0.03,1.03)},anchor=south west}
 ]  % replace the ending bracket
 \addlegendimage{no markers, color0}
 \addlegendimage{no markers, color1}%]
-\path [draw=color0, semithick] (axis cs:10,0.00770166708775478)
---(axis cs:10,0.0142983329122452);
+\path [draw=color0, semithick] (axis cs:10,0.00720365241117081)
+--(axis cs:10,0.00899634758882919);
 
-\path [draw=color0, semithick] (axis cs:15,0.00518290930213455)
---(axis cs:15,0.0108170906978654);
+\path [draw=color0, semithick] (axis cs:15,0.00739274534997061)
+--(axis cs:15,0.00920725465002939);
 
-\path [draw=color0, semithick] (axis cs:20,0.00601353051246125)
---(axis cs:20,0.0119864694875387);
+\path [draw=color0, semithick] (axis cs:20,0.00701469835649088)
+--(axis cs:20,0.00878530164350912);
 
-\path [draw=color0, semithick] (axis cs:25,0.00436352508071857)
---(axis cs:25,0.00963647491928143);
+\path [draw=color0, semithick] (axis cs:25,0.0072981818365102)
+--(axis cs:25,0.0091018181634898);
 
-\path [draw=color0, semithick] (axis cs:30,0.00770166708775478)
---(axis cs:30,0.0142983329122452);
+\path [draw=color0, semithick] (axis cs:30,0.00663722830366313)
+--(axis cs:30,0.00836277169633688);
 
-\path [draw=color0, semithick] (axis cs:35,0.00436352508071857)
---(axis cs:35,0.00963647491928143);
+\path [draw=color0, semithick] (axis cs:35,0.00673153929277146)
+--(axis cs:35,0.00846846070722854);
 
-\path [draw=color0, semithick] (axis cs:40,0.00601353051246126)
---(axis cs:40,0.0119864694875387);
+\path [draw=color0, semithick] (axis cs:40,0.00588421142444874)
+--(axis cs:40,0.00751578857555126);
 
-\path [draw=color0, semithick] (axis cs:45,0.00276952919768046)
---(axis cs:45,0.00723047080231954);
+\path [draw=color0, semithick] (axis cs:45,0.00541504395027496)
+--(axis cs:45,0.00698495604972504);
 
-\path [draw=color0, semithick] (axis cs:50,0.00601353051246126)
---(axis cs:50,0.0119864694875387);
+\path [draw=color0, semithick] (axis cs:50,0.00532136080242511)
+--(axis cs:50,0.00687863919757489);
 
-\path [draw=color0, semithick] (axis cs:55,0.00355786978234166)
---(axis cs:55,0.00844213021765834);
+\path [draw=color0, semithick] (axis cs:55,0.0056963987307128)
+--(axis cs:55,0.0073036012692872);
 
 \path [draw=color1, semithick] (axis cs:10,0)
 --(axis cs:10,0);
 
-\path [draw=color1, semithick] (axis cs:15,0)
---(axis cs:15,0);
+\path [draw=color1, semithick] (axis cs:15,5.00012499922442e-09)
+--(axis cs:15,0.000199994999875001);
 
 \path [draw=color1, semithick] (axis cs:20,0)
 --(axis cs:20,0);
 
-\path [draw=color1, semithick] (axis cs:25,0)
---(axis cs:25,0);
+\path [draw=color1, semithick] (axis cs:25,5.85927866054973e-05)
+--(axis cs:25,0.000341407213394503);
 
-\path [draw=color1, semithick] (axis cs:30,0)
---(axis cs:30,0);
+\path [draw=color1, semithick] (axis cs:30,0.000126820901954087)
+--(axis cs:30,0.000473179098045913);
 
-\path [draw=color1, semithick] (axis cs:35,0)
---(axis cs:35,0);
+\path [draw=color1, semithick] (axis cs:35,5.00012500163677e-09)
+--(axis cs:35,0.000199994999874998);
 
 \path [draw=color1, semithick] (axis cs:40,0)
 --(axis cs:40,0);
 
-\path [draw=color1, semithick] (axis cs:45,0.000587201359004053)
---(axis cs:45,0.00341279864099595);
+\path [draw=color1, semithick] (axis cs:45,5.00012499814022e-09)
+--(axis cs:45,0.000199994999875002);
 
 \path [draw=color1, semithick] (axis cs:50,0)
 --(axis cs:50,0);
 
-\path [draw=color1, semithick] (axis cs:55,0)
---(axis cs:55,0);
+\path [draw=color1, semithick] (axis cs:55,5.8592786605497e-05)
+--(axis cs:55,0.000341407213394503);
 
 \addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
-10 0.00770166708775478
-15 0.00518290930213455
-20 0.00601353051246125
-25 0.00436352508071857
-30 0.00770166708775478
-35 0.00436352508071857
-40 0.00601353051246126
-45 0.00276952919768046
-50 0.00601353051246126
-55 0.00355786978234166
+10 0.00720365241117081
+15 0.00739274534997061
+20 0.00701469835649088
+25 0.0072981818365102
+30 0.00663722830366313
+35 0.00673153929277146
+40 0.00588421142444874
+45 0.00541504395027496
+50 0.00532136080242511
+55 0.0056963987307128
 };
 \addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
-10 0.0142983329122452
-15 0.0108170906978654
-20 0.0119864694875387
-25 0.00963647491928143
-30 0.0142983329122452
-35 0.00963647491928143
-40 0.0119864694875387
-45 0.00723047080231954
-50 0.0119864694875387
-55 0.00844213021765834
+10 0.00899634758882919
+15 0.00920725465002939
+20 0.00878530164350912
+25 0.0091018181634898
+30 0.00836277169633688
+35 0.00846846070722854
+40 0.00751578857555126
+45 0.00698495604972504
+50 0.00687863919757489
+55 0.0073036012692872
 };
 \addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 10 0
-15 0
+15 5.00012499922442e-09
 20 0
-25 0
-30 0
-35 0
+25 5.85927866054973e-05
+30 0.000126820901954087
+35 5.00012500163677e-09
 40 0
-45 0.000587201359004053
+45 5.00012499814022e-09
 50 0
-55 0
+55 5.8592786605497e-05
 };
 \addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 10 0
-15 0
+15 0.000199994999875001
 20 0
-25 0
-30 0
-35 0
+25 0.000341407213394503
+30 0.000473179098045913
+35 0.000199994999874998
 40 0
-45 0.00341279864099595
+45 0.000199994999875002
 50 0
-55 0
+55 0.000341407213394503
 };
 \addplot [semithick, color0, forget plot]
 table {%
-10 0.011
-15 0.008
-20 0.009
-25 0.007
-30 0.011
-35 0.007
-40 0.009
-45 0.005
-50 0.009
-55 0.006
+10 0.0081
+15 0.0083
+20 0.0079
+25 0.0082
+30 0.0075
+35 0.0076
+40 0.0067
+45 0.0062
+50 0.0061
+55 0.0065
 };
 \addplot [semithick, color1, forget plot]
 table {%
 10 0
-15 0
+15 0.0001
 20 0
-25 0
-30 0
-35 0
+25 0.0002
+30 0.0003
+35 0.0001
 40 0
-45 0.002
+45 0.0001
 50 0
-55 0
+55 0.0002
 };
 \end{axis}
 

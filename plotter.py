@@ -112,7 +112,7 @@ def fix_labels_in_tikz(*labels) -> str:
     
     insertion += "legend cell align={right},\n"
     insertion += "legend style={draw=white!80.0!black},\n"
-    insertion += "legend style={at={(0.03,1.03)},anchor=south west}\n"
+    insertion += "legend style={at={(0.1,1.03)},anchor=south west}\n"
     insertion += "]  % replace the ending bracket\n"
     
     for i in range(len(labels)):

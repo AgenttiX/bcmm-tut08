@@ -27,29 +27,29 @@ legend style={at={(0.03,1.03)},anchor=south west}
 \path [draw=color0, semithick] (axis cs:2,0)
 --(axis cs:2,0);
 
-\path [draw=color0, semithick] (axis cs:3,0)
---(axis cs:3,0);
+\path [draw=color0, semithick] (axis cs:3,0.00128804005049036)
+--(axis cs:3,0.00211195994950964);
 
-\path [draw=color0, semithick] (axis cs:4,0.0933879762796797)
---(axis cs:4,0.11261202372032);
+\path [draw=color0, semithick] (axis cs:4,0.107562397252678)
+--(axis cs:4,0.113837602747322);
 
-\path [draw=color0, semithick] (axis cs:5,0.304260970181182)
---(axis cs:5,0.333739029818818);
+\path [draw=color0, semithick] (axis cs:5,0.335860889956965)
+--(axis cs:5,0.345339110043036);
 
-\path [draw=color0, semithick] (axis cs:6,0.545306721183895)
---(axis cs:6,0.576693278816105);
+\path [draw=color0, semithick] (axis cs:6,0.545525567871606)
+--(axis cs:6,0.555474432128394);
 
-\path [draw=color0, semithick] (axis cs:7,0.671323351881305)
---(axis cs:7,0.700676648118695);
+\path [draw=color0, semithick] (axis cs:7,0.714304151248096)
+--(axis cs:7,0.723295848751904);
 
-\path [draw=color0, semithick] (axis cs:8,0.77711978261053)
---(axis cs:8,0.80288021738947);
+\path [draw=color0, semithick] (axis cs:8,0.810209740497088)
+--(axis cs:8,0.817990259502912);
 
-\path [draw=color0, semithick] (axis cs:9,0.866613903524423)
---(axis cs:9,0.887386096475577);
+\path [draw=color0, semithick] (axis cs:9,0.882214613995133)
+--(axis cs:9,0.888585386004867);
 
-\path [draw=color0, semithick] (axis cs:10,0.882184909577594)
---(axis cs:10,0.901815090422406);
+\path [draw=color0, semithick] (axis cs:10,0.883024318025998)
+--(axis cs:10,0.889375681974002);
 
 \path [draw=color1, semithick] (axis cs:1,1)
 --(axis cs:1,1);
@@ -57,107 +57,107 @@ legend style={at={(0.03,1.03)},anchor=south west}
 \path [draw=color1, semithick] (axis cs:2,1)
 --(axis cs:2,1);
 
-\path [draw=color1, semithick] (axis cs:3,1)
---(axis cs:3,1);
+\path [draw=color1, semithick] (axis cs:3,0.99788804005049)
+--(axis cs:3,0.99871195994951);
 
-\path [draw=color1, semithick] (axis cs:4,0.88530592964746)
---(axis cs:4,0.90469407035254);
+\path [draw=color1, semithick] (axis cs:4,0.885150030000143)
+--(axis cs:4,0.891449969999857);
 
-\path [draw=color1, semithick] (axis cs:5,0.663224479704593)
---(axis cs:5,0.692775520295408);
+\path [draw=color1, semithick] (axis cs:5,0.653657538192035)
+--(axis cs:5,0.663142461807965);
 
-\path [draw=color1, semithick] (axis cs:6,0.419322787237522)
---(axis cs:6,0.450677212762478);
+\path [draw=color1, semithick] (axis cs:6,0.44162859738102)
+--(axis cs:6,0.45157140261898);
 
-\path [draw=color1, semithick] (axis cs:7,0.29833606464826)
---(axis cs:7,0.32766393535174);
+\path [draw=color1, semithick] (axis cs:7,0.272823341536369)
+--(axis cs:7,0.281776658463631);
 
-\path [draw=color1, semithick] (axis cs:8,0.191257001922624)
---(axis cs:8,0.216742998077376);
+\path [draw=color1, semithick] (axis cs:8,0.17615812545754)
+--(axis cs:8,0.18384187454246);
 
-\path [draw=color1, semithick] (axis cs:9,0.103949925373411)
---(axis cs:9,0.124050074626589);
+\path [draw=color1, semithick] (axis cs:9,0.105192410741427)
+--(axis cs:9,0.111407589258573);
 
-\path [draw=color1, semithick] (axis cs:10,0.0905131670194948)
---(axis cs:10,0.109486832980505);
+\path [draw=color1, semithick] (axis cs:10,0.103810139323529)
+--(axis cs:10,0.109989860676471);
 
 \addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 1 0
 2 0
-3 0
-4 0.0933879762796797
-5 0.304260970181182
-6 0.545306721183895
-7 0.671323351881305
-8 0.77711978261053
-9 0.866613903524423
-10 0.882184909577594
+3 0.00128804005049036
+4 0.107562397252678
+5 0.335860889956965
+6 0.545525567871606
+7 0.714304151248096
+8 0.810209740497088
+9 0.882214613995133
+10 0.883024318025998
 };
 \addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 1 0
 2 0
-3 0
-4 0.11261202372032
-5 0.333739029818818
-6 0.576693278816105
-7 0.700676648118695
-8 0.80288021738947
-9 0.887386096475577
-10 0.901815090422406
+3 0.00211195994950964
+4 0.113837602747322
+5 0.345339110043036
+6 0.555474432128394
+7 0.723295848751904
+8 0.817990259502912
+9 0.888585386004867
+10 0.889375681974002
 };
 \addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 1 1
 2 1
-3 1
-4 0.88530592964746
-5 0.663224479704593
-6 0.419322787237522
-7 0.29833606464826
-8 0.191257001922624
-9 0.103949925373411
-10 0.0905131670194948
+3 0.99788804005049
+4 0.885150030000143
+5 0.653657538192035
+6 0.44162859738102
+7 0.272823341536369
+8 0.17615812545754
+9 0.105192410741427
+10 0.103810139323529
 };
 \addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 1 1
 2 1
-3 1
-4 0.90469407035254
-5 0.692775520295408
-6 0.450677212762478
-7 0.32766393535174
-8 0.216742998077376
-9 0.124050074626589
-10 0.109486832980505
+3 0.99871195994951
+4 0.891449969999857
+5 0.663142461807965
+6 0.45157140261898
+7 0.281776658463631
+8 0.18384187454246
+9 0.111407589258573
+10 0.109989860676471
 };
 \addplot [semithick, color0, forget plot]
 table {%
 1 0
 2 0
-3 0
-4 0.103
-5 0.319
-6 0.561
-7 0.686
-8 0.79
-9 0.877
-10 0.892
+3 0.0017
+4 0.1107
+5 0.3406
+6 0.5505
+7 0.7188
+8 0.8141
+9 0.8854
+10 0.8862
 };
 \addplot [semithick, color1, forget plot]
 table {%
 1 1
 2 1
-3 1
-4 0.895
-5 0.678
-6 0.435
-7 0.313
-8 0.204
-9 0.114
-10 0.1
+3 0.9983
+4 0.8883
+5 0.6584
+6 0.4466
+7 0.2773
+8 0.18
+9 0.1083
+10 0.1069
 };
 \end{axis}
 
