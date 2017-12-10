@@ -1,13 +1,14 @@
 import color
 import direction
 import logger
+import plotter
 import vehicle
 
 import numpy as np
 import time
 import typing as tp
 
-log = logger.get_logger(__name__, level="DEBUG", disabled=False)
+log = logger.get_logger(__name__, level="DEBUG", disabled=True)
 
 
 def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None, skip: tp.Union[int, tp.List[int]] = None) \
@@ -170,7 +171,11 @@ def locate(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None, skip: 
     return num_matches, loc_x, loc_y, possible_loc
 
 
-def locate_with_one_possible_error(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None):
+def locate_with_one_possible_error(
+        m: np.ndarray,
+        history: np.ndarray,
+        v: vehicle.Vehicle = None
+    ) -> tp.Tuple[int, int, int, np.ndarray]:
     """
     Try locating when exactly one of the data points can be wrong
     :param m: map (numpy array)
@@ -207,7 +212,11 @@ def locate_with_one_possible_error(m: np.ndarray, history: np.ndarray, v: vehicl
     return num_matches, loc_x, loc_y, possible_total_loc
 
 
-def locate_with_error_fallback(m: np.ndarray, history: np.ndarray, v: vehicle.Vehicle = None):
+def locate_with_error_fallback(
+        m: np.ndarray,
+        history: np.ndarray,
+        v: vehicle.Vehicle = None
+    ) -> tp.Tuple[int, int, int, np.ndarray]:
     """
     Try locating with the primary algorithm and fall back to the algorithm that can handle errors if necessary
     :param m: map (numpy array)
@@ -224,30 +233,62 @@ def locate_with_error_fallback(m: np.ndarray, history: np.ndarray, v: vehicle.Ve
     return num_matches, x, y, possible_loc
 
 
-def locate_with_movement_and_error_fallback(m: np.ndarray, history_method: callable, v: vehicle.Vehicle, retries: int):
+def locate_with_movement_and_error_fallback(
+        m: np.ndarray,
+        v: vehicle.Vehicle,
+        max_moves: int,
+        min_moves: int = 0,
+        with_errors=True,
+        plot: plotter.LocatorPlot = None
+    ) -> tp.Tuple[int, int, int, np.ndarray, int]:
     """
-    DOES NOT WORK YET. Would require the vehicle to continuously generate a history with errors.
-
     Try locating with the primary algorithm and fall back to the algorithm that can handle errors if necessary.
     If this doesn't help, move the vehicle.
     :param m: map (numpy array)
-    :param history_method: vehicle history (numpy array)
     :param v: vehicle for debugging purposes
-    :param retries: how many times the vehicle should be moved and relocated if the previous attempts fail
+    :param max_moves: how many times the vehicle should be moved and relocated if the previous attempts fail
+    :param min_moves: how many times the vehicle should be moved at least before trying to locate
+    :param with_errors: whether to use such a version of vehicle history that has errors in it
+    :param plot: where to plot the movement
     :return: number of possible locations, loc_x, loc_y, array of possible locations
     """
-    if not retries > 1:
-        raise ValueError("Invalid retry count")
+    if not (max_moves > 1 and max_moves >= min_moves >= 0):
+        raise ValueError("Invalid movement counts")
 
-    num_matches, x, y, possible_loc = locate_with_error_fallback(m, history_method())
+    start_time = time.perf_counter()
 
     movement_count = 0
-    for movement_count in range(retries+1):
+    for i in range(min_moves):
+        v.move_unbound()
+        movement_count += 1
+
+    if with_errors:
+        num_matches, x, y, possible_loc = locate_with_error_fallback(m, v.history_error_builtin())
+    else:
+        # The error fallback shouldn't be necessary here but it has no negative effects either
+        num_matches, x, y, possible_loc = locate_with_error_fallback(m, v.history())
+
+    while movement_count < max_moves:
         if num_matches == 1:
             break
         else:
             log.debug("Locating did not succeed. Moving the vehicle.")
             v.move_unbound()
-        num_matches, x, y, possible_loc = locate_with_error_fallback(m, history_method)
+            movement_count += 1
+            if plot is not None:
+                plot.plot_vehicle()
+
+        if with_errors:
+            num_matches, x, y, possible_loc = locate_with_error_fallback(m, v.history_error_builtin())
+        else:
+            # The error fallback shouldn't be necessary here but it has no negative effects either
+            num_matches, x, y, possible_loc = locate_with_error_fallback(m, v.history())
+
+    if movement_count > max_moves:
+        raise RuntimeError("The algorithm made too many movements")
+    elif movement_count < min_moves:
+        raise RuntimeError("The algorithm made too few movements")
+
+    log.debug("Locating with movement took the total of", time.perf_counter() - start_time)
 
     return num_matches, x, y, possible_loc, movement_count
