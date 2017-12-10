@@ -120,7 +120,7 @@ class Vehicle:
         
         return arr
 
-    def history_error_fixed(self) -> np.ndarray:
+    def history_error_one(self) -> np.ndarray:
         """
         Get movement history that has a single measurement error in it
         :return: numpy array of (direction, color, garbage, garbage)

@@ -12,7 +12,7 @@ class VehicleTest(unittest.TestCase):
 
         history_colors = v.history()[:, 1]
         for i in range(10):
-            history_err_colors = v.history_error_fixed()[:, 1]
+            history_err_colors = v.history_error_one()[:, 1]
             diff = np.sum(history_colors != history_err_colors)
             self.assertEqual(diff, 1)
 
