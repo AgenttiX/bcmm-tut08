@@ -150,18 +150,15 @@ def run_MC_4(gridsize: int, steps: int, MC_iterations: int, error=0.001) -> np.n
         
         if num_found_exact[run_idx] == 1:
             found_correct_exact[run_idx] = 1
-            
+        
+        if num_found_inexact[run_idx] == 1:
             if x_err == x_ext and y_err == y_ext:
                 found_correct_inexact[run_idx] = 1
         
-        if num_found_inexact[run_idx] == 1:
+        if num_found_corrected[run_idx] == 1:
             if x_corr == x_ext and y_corr == y_ext:
                 found_correct_corrected[run_idx] = 1
-    
-        if num_found_corrected[run_idx] == 1:
-            if x_err == x_ext and y_err == y_ext:
-                found_correct_inexact[run_idx] = 1
-    
+                
     
         # now the moving error correction from 'movement.py'
         
@@ -178,37 +175,6 @@ def run_MC_4(gridsize: int, steps: int, MC_iterations: int, error=0.001) -> np.n
     return num_found_exact, num_found_inexact, num_found_corrected, num_found_corrected_move, \
             found_correct_exact, found_correct_inexact, found_correct_corrected, found_correct_corrected_move, required_moves
         
-
-def run_MC_5_REMOVE(gridsize: int, steps: int, MC_iterations: int, error=0.001) -> np.ndarray:
-    """
-    Yet another way to run calculations. This time thi just returns all values
-    """
-    # num found vector for every simulation in MC
-    num_found_exact    = np.zeros((MC_iterations), dtype=int)
-    
-    # if TP then if location correct
-    found_correct_exact    = np.zeros((MC_iterations), dtype=int)
-    
-    
-    height = gridsize
-    width = gridsize
-    
-    # Runs simulation in loop
-    for run_idx in range(MC_iterations):
-        m = mapgrid.generate_map(width=width, height=height)
-        v = vehicle.Vehicle(m)
-        for i in range(steps):
-            v.move_unbound()
-        
-        
-        err_hist = v.history_error(iteration_for_seed=run_idx, error=error)
-        
-        num_found_exact[run_idx], x_ext, y_ext = locator.locate(v.map(), v.history())[0:3]
-        
-        if num_found_exact[run_idx] == 1:
-            found_correct_exact[run_idx] = 1
-            
-    return found_correct_exact
 
 
 def calc_or_load_simulation(gridsize=-1, steps=10, error=0.001, 
@@ -389,7 +355,7 @@ def compare_algorithms_var_error(iterations=1000):
                             savename="virheenkorjaus",
                             ylim=(-0.05,1.05))
 
-        
+
     
     
     

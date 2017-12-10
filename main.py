@@ -21,6 +21,7 @@ def main():
     #montecarlo_2.compare_algorithms_var_error(iterations=1000)
     
     #movement.movement_monte_carlo()
+    movement.movement_monte_carlo_plot_movenents()
     
     
     #montecarlo.single_four_table(iterations=10000)

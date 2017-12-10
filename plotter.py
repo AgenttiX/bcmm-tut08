@@ -406,7 +406,7 @@ def plot_TPR_TNR_ACC(x_axis, TPR, TNR, ACC, xlabel="", ylim=None, log_scale=Fals
     
 def plot_one(x_axis, dat, xlabel="", ylim=None, log_scale=False, savename=None):
     
-    fig = plt.figure(xlabel+" TPR, TNR, ACC")
+    fig = plt.figure(xlabel)
     if log_scale:
         fig.gca().set_xscale("log", nonposx='clip')
         
@@ -474,7 +474,6 @@ def plot_multiple_errorbar(x_axis,
     for i, y in enumerate(list_y):
         plt.errorbar(x_axis, y, yerr=list_yerr[i], capsize=4, label=list_label_0[i], linestyle=linestyles_0[i])
 
-    
     plt.xlabel(xlabel)
     plt.ylabel("P")
     plt.ylim(ylim)
@@ -494,5 +493,20 @@ def plot_multiple_errorbar(x_axis,
         if len(list_label) > 0:
             plt.legend()    
         plt.savefig("figures/" + savename + '.pgf')
+    
+def plot_histogram(x_axis, y_axis, xlabel="", ylim=None, log_scale=False, savename=None):
+    
+    fig = plt.figure("histogram")
+    
+    plt.bar(x_axis, y_axis, 0.25)
+    
+    plt.xlabel(xlabel)
+    plt.ylabel("P")
+    plt.ylim(ylim)
+    
+    block_print()
+    tikz_save("figures/" + savename + '.tikz')
+    enable_print()
+
     
     

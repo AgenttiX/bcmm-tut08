@@ -7,7 +7,7 @@ import plotter
 import numpy as np
 import time
 
-log = logger.get_logger(__name__, level="DEBUG", disabled=False)  # Root logger
+log = logger.get_logger(__name__, level="DEBUG", disabled=False, colors=True)
 
 
 def movement_single_run():
@@ -74,6 +74,51 @@ def movement_monte_carlo():
     print("Fail", fail)
     print("Required moves", required_moves)
     print("Total time", time.perf_counter() - start_time)
+
+
+def movement_monte_carlo_plot_movenents():
+    start_time = time.perf_counter()
+
+    height = 20
+    width = 20
+    iterations = 10000
+    min_moves = 10
+    max_moves = 20
+
+    success = 0
+    wrong = 0
+    fail = 0
+    required_moves = np.zeros(max_moves+1, dtype=int)
+
+    for i in range(iterations):
+        if i % 100 == 0:
+            log.debug("Running iteration", i)
+
+        m = mapgrid.generate_map(width=width, height=height)
+        v = vehicle.Vehicle(m, 10)
+        num_matches, x, y, possible_loc, movements = \
+            locator.locate_with_movement_and_error_fallback(m, v, max_moves, min_moves=min_moves)
+
+        if num_matches == 1:
+            correct_x, correct_y, direction = v.location()
+            if x == correct_x and y == correct_y:
+                success += 1
+                required_moves[movements] += 1
+            else:
+                wrong += 1
+        else:
+            fail += 1
+
+    #print("Success:", success)
+    #print("Wrong:", wrong)
+    #print("Fail", fail)
+    #print("Required moves", required_moves)
+    #print("Total time", time.perf_counter() - start_time)
+    
+    x_axis = np.arange(1,8)
+    y_axis = (required_moves/iterations)[10:17]
+    
+    plotter.plot_histogram(x_axis, y_axis, xlabel="lisäaskelten lukumäärä", ylim=None, savename="lisa-askelten_lkm")
 
 if __name__ == "__main__":
     # movement_single_run()
