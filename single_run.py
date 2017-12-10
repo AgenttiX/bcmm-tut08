@@ -23,7 +23,7 @@ def plot_single_run():
     # plot.plot_vehicle()
 
     log.info("Start location:", str(v.location()))
-    log.info("Start color:", v.color())
+    log.info("Start color:", v.get_color())
 
     for i in range(10):
         v.move_unbound()
@@ -33,7 +33,7 @@ def plot_single_run():
     num_matches, x, y, possible_loc = locator.locate(v.map(), v.history())
 
     log.info("End location:", v.location())
-    log.info("End color:", v.color())
+    log.info("End color:", v.get_color())
 
     if num_matches == 1:
         loc_x, loc_y, dir = v.location()

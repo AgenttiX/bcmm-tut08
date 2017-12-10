@@ -16,6 +16,20 @@ class VehicleTest(unittest.TestCase):
             diff = np.sum(history_colors != history_err_colors)
             self.assertEqual(diff, 1)
 
+    def test_color_changer(self):
+        equal = 0
+        unequal = 0
+        tries = 100000
+        for i in range(tries):
+            color = np.random.randint(0, 4)
+            result = vehicle.Vehicle.change_measurement(color)
+            if color == result:
+                equal += 1
+            else:
+                unequal += 1
+        print("Equal:", equal)
+        print("Unequal:", unequal)
+        print("Unequal/tries:", unequal/tries, "(should be about 0.001)")
 
 if __name__ == "__main__":
     unittest.main()

@@ -35,8 +35,12 @@ class Vehicle:
         log.info("Starting at direction", self.__direction)
 
         self.__history = collections.deque(maxlen=self.__max_history)
+        self.__history_error = collections.deque(maxlen=self.__max_history)
 
-        self.__history.append((direction.RelativeDirection.FRONT, self.color(), 0, 0))
+        self.__history.append((direction.RelativeDirection.FRONT, self.get_color(), 0, 0))
+        self.__history_error.append(
+            (direction.RelativeDirection.FRONT, self.change_measurement(self.get_color()), 0, 0)
+        )
 
     def start_direction(self):
         """
@@ -52,12 +56,29 @@ class Vehicle:
         """
         return self.__x, self.__y, self.__direction
 
-    def color(self) -> color.Color:
+    def get_color(self) -> color.Color:
         """
         Get the color of the cell the vehicle is currently on
         :return:
         """
         return color.Color(self.__map[self.__y, self.__x])
+
+    @staticmethod
+    def change_measurement(measurement: typing.Union[int, color.Color]) -> color.Color:
+        """
+        Change the given value with the probability of 0.001
+        :param measurement: color value
+        :return: color value
+        """
+        # Two numbers are used to ensure that the result is truly random
+        random_int1 = np.random.randint(1000)
+        random_int2 = np.random.randint(1000)
+        if random_int1 == random_int2:
+            color_change = np.random.randint(1, 4)
+            result = (measurement + color_change) % 4
+        else:
+            result = measurement
+        return color.Color(result)
 
     def history(self) -> np.ndarray:
         """
@@ -123,7 +144,7 @@ class Vehicle:
     def history_error_one(self) -> np.ndarray:
         """
         Get movement history that has a single measurement error in it
-        :return: numpy array of (direction, color, garbage, garbage)
+        :return: numpy array of (direction, color, rel_x, rel_y)
         """
         history = self.history()
         change_index = np.random.randint(0, history.shape[0])
@@ -131,6 +152,21 @@ class Vehicle:
         history[change_index, 1] = (history[change_index, 1] + change_value) % 4
 
         return history
+
+    def history_error_builtin(self) -> np.ndarray:
+        """
+        Get the movement history that has built-in errors
+        :return: numpy array of (direction, color, rel_x, rel_y)
+        """
+        l = len(self.__history_error)
+        arr = np.zeros(shape=(l, 4))
+        for i in range(l):
+            snapshot = self.__history_error[i]
+            arr[i, 0] = snapshot[0]
+            arr[i, 1] = snapshot[1]
+            arr[i, 2] = snapshot[2]
+            arr[i, 3] = snapshot[3]
+        return arr
 
     def map(self) -> np.ndarray:
         """
@@ -180,7 +216,8 @@ class Vehicle:
             rel_dx, rel_dy = rel_dir.xy()
             self.__rel_x += rel_dx
             self.__rel_y += rel_dy
-            self.__history.append((rel_dir, self.color(), self.__rel_x, self.__rel_y))
+            self.__history.append((rel_dir, self.get_color(), self.__rel_x, self.__rel_y))
+            self.__history_error.append((rel_dir, self.change_measurement(self.get_color()), self.__rel_x, self.__rel_y))
             # print("Moving", direction.Direction(self.__direction), direction.RelativeDirection(rel_dir))
 
     def move_unbound(self):
@@ -200,4 +237,5 @@ class Vehicle:
         rel_dx, rel_dy = rel_dir.xy()
         self.__rel_x += rel_dx
         self.__rel_y += rel_dy
-        self.__history.append((rel_dir, self.color(), self.__rel_x, self.__rel_y))
+        self.__history.append((rel_dir, self.get_color(), self.__rel_x, self.__rel_y))
+        self.__history_error.append((rel_dir, self.change_measurement(self.get_color()), self.__rel_x, self.__rel_y))
