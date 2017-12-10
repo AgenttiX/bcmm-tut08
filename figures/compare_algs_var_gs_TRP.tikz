@@ -1,0 +1,65 @@
+% This file was created by matplotlib2tikz v0.6.14.
+\begin{tikzpicture}
+
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+
+\begin{axis}[
+xlabel={kartan koko},
+ylabel={P},
+xmin=7.75, xmax=57.25,
+ymin=0.991133896260555, ymax=1.00042219541616,
+tick align=outside,
+tick pos=left,
+x grid style={white!69.019607843137251!black},
+y grid style={white!69.019607843137251!black},
+legend cell align={left},
+legend entries={{ei virheenkorjausta},{vihreenkorjaus},{virheenkorjaus lisäaskelilla}},
+legend style={at={(0.5,0.5)}, anchor=center, draw=white!80.0!black}
+]
+\addlegendimage{no markers, color0}
+\addlegendimage{no markers, color1}
+\addlegendimage{no markers, color2}
+\addplot [semithick, color0, dashed]
+table {%
+10 0.992529348986126
+15 0.995618838992333
+20 0.993333333333333
+25 0.992
+30 0.991556091676719
+35 0.993865030674847
+40 0.992268041237113
+45 0.994666666666667
+50 0.99181446111869
+55 0.998589562764457
+};
+\addplot [semithick, color1, dash pattern=on 1pt off 3pt on 3pt off 3pt]
+table {%
+10 1
+15 1
+20 0.998888888888889
+25 0.998857142857143
+30 1
+35 0.998773006134969
+40 1
+45 0.998666666666667
+50 0.997271487039563
+55 1
+};
+\addplot [semithick, color2, dotted]
+table {%
+10 1
+15 1
+20 1
+25 1
+30 1
+35 1
+40 1
+45 0.998666666666667
+50 1
+55 1
+};
+\end{axis}
+
+\end{tikzpicture}

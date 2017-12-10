@@ -1,0 +1,66 @@
+% This file was created by matplotlib2tikz v0.6.14.
+\begin{tikzpicture}
+
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+
+\begin{axis}[
+xlabel={mittausvirhe},
+ylabel={P},
+xmin=6.30957344480194e-05, xmax=1.58489319246111,
+ymin=-0.0453, ymax=0.9513,
+xmode=log,
+tick align=outside,
+tick pos=left,
+x grid style={lightgray!92.026143790849673!black},
+y grid style={lightgray!92.026143790849673!black},
+legend entries={{ei virheenkorjausta},{vihreenkorjaus},{virheenkorjaus lisäaskelilla}},
+legend cell align={left},
+legend style={at={(0.03,0.03)}, anchor=south west, draw=white!80.0!black}
+]
+\addlegendimage{no markers, color0}
+\addlegendimage{no markers, color1}
+\addlegendimage{no markers, color2}
+\addplot [semithick, color0, dashed]
+table {%
+0.0001 0.893
+0.000278255940220713 0.887
+0.000774263682681127 0.893
+0.00215443469003188 0.881
+0.00599484250318941 0.849
+0.0166810053720006 0.768
+0.0464158883361278 0.55
+0.129154966501488 0.229
+0.359381366380463 0.016
+1 0
+};
+\addplot [semithick, color1, dash pattern=on 1pt off 3pt on 3pt off 3pt]
+table {%
+0.0001 0.894
+0.000278255940220713 0.891
+0.000774263682681127 0.898
+0.00215443469003188 0.894
+0.00599484250318941 0.894
+0.0166810053720006 0.871
+0.0464158883361278 0.775
+0.129154966501488 0.509
+0.359381366380463 0.107
+1 0.036
+};
+\addplot [semithick, color2, dotted]
+table {%
+0.0001 0.894
+0.000278255940220713 0.892
+0.000774263682681127 0.899
+0.00215443469003188 0.898
+0.00599484250318941 0.906
+0.0166810053720006 0.895
+0.0464158883361278 0.894
+0.129154966501488 0.887
+0.359381366380463 0.657
+1 0.426
+};
+\end{axis}
+
+\end{tikzpicture}

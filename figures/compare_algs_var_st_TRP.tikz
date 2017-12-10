@@ -1,0 +1,65 @@
+% This file was created by matplotlib2tikz v0.6.14.
+\begin{tikzpicture}
+
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+
+\begin{axis}[
+xlabel={askelten lukumäärä},
+ylabel={P},
+xmin=2.65, xmax=10.35,
+ymin=0.978350515463917, ymax=1.00103092783505,
+tick align=outside,
+tick pos=left,
+x grid style={lightgray!92.026143790849673!black},
+y grid style={lightgray!92.026143790849673!black},
+legend style={at={(0.97,0.03)}, anchor=south east, draw=white!80.0!black},
+legend cell align={left},
+legend entries={{ei virheenkorjausta},{vihreenkorjaus},{virheenkorjaus lisäaskelilla}}
+]
+\addlegendimage{no markers, color0}
+\addlegendimage{no markers, color1}
+\addlegendimage{no markers, color2}
+\addplot [semithick, color0, dashed]
+table {%
+1 nan
+2 nan
+3 1
+4 0.979381443298969
+5 0.996845425867508
+6 0.987132352941177
+7 0.983493810178817
+8 0.98531211750306
+9 0.985343855693348
+10 0.982973893303065
+};
+\addplot [semithick, color1, dash pattern=on 1pt off 3pt on 3pt off 3pt]
+table {%
+1 nan
+2 nan
+3 1
+4 0.979381443298969
+5 0.996845425867508
+6 0.988970588235294
+7 0.99312242090784
+8 0.993880048959608
+9 0.997745208568207
+10 0.996594778660613
+};
+\addplot [semithick, color2, dotted]
+table {%
+1 nan
+2 nan
+3 1
+4 1
+5 1
+6 1
+7 1
+8 1
+9 1
+10 1
+};
+\end{axis}
+
+\end{tikzpicture}

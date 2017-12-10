@@ -1,0 +1,65 @@
+% This file was created by matplotlib2tikz v0.6.14.
+\begin{tikzpicture}
+
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+
+\begin{axis}[
+xlabel={kartan koko},
+ylabel={P},
+xmin=7.75, xmax=57.25,
+ymin=0.69655, ymax=0.94845,
+tick align=outside,
+tick pos=left,
+x grid style={white!69.019607843137251!black},
+y grid style={white!69.019607843137251!black},
+legend cell align={left},
+legend entries={{ei virheenkorjausta},{vihreenkorjaus},{virheenkorjaus lisäaskelilla}},
+legend style={draw=white!80.0!black}
+]
+\addlegendimage{no markers, color0}
+\addlegendimage{no markers, color1}
+\addlegendimage{no markers, color2}
+\addplot [semithick, color0, dashed]
+table {%
+10 0.93
+15 0.909
+20 0.894
+25 0.868
+30 0.822
+35 0.81
+40 0.77
+45 0.746
+50 0.727
+55 0.708
+};
+\addplot [semithick, color1, dash pattern=on 1pt off 3pt on 3pt off 3pt]
+table {%
+10 0.937
+15 0.913
+20 0.899
+25 0.874
+30 0.829
+35 0.814
+40 0.776
+45 0.749
+50 0.731
+55 0.709
+};
+\addplot [semithick, color2, dotted]
+table {%
+10 0.937
+15 0.913
+20 0.9
+25 0.875
+30 0.829
+35 0.815
+40 0.776
+45 0.749
+50 0.733
+55 0.709
+};
+\end{axis}
+
+\end{tikzpicture}

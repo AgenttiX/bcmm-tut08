@@ -254,9 +254,7 @@ def calc_or_load_simulation(gridsize=-1, steps=10, error=0.001,
             raise Exception("No calulations exists (yet) with these parameters\n" + filename)
         
         npzfile = np.load(filename)
-        
-        log.debug("npzfile", npzfile.files)
-        
+                
         x_axis     = npzfile['x_axis']
         res_vec    = npzfile['res_vec']
         error_info = npzfile['error_info']
@@ -277,12 +275,11 @@ def plot_TP_error(iterations=1000, use_stored_results=False):
     num_1_1_incorrect = np.sum(error_info[:,:,2], axis=1) # sum(TP) - sum(correct)
     
     dividor = num_1_1_matches #+ (num_1_1_matches==0)*1
-    
-    log.debug(num_1_1_incorrect, dividor)
-    
+        
     pres = num_1_1_incorrect / dividor
     
     plotter.plot_one(x_axis, pres, xlabel="askelten lukumäärä", ylim=None, log_scale=False, savename="loc_err_in_TP")
+    
     
 def compare_algorithms_var_error(iterations=1000):
         
@@ -350,15 +347,217 @@ def compare_algorithms_var_error(iterations=1000):
                             list_yerr = [y_err_1,y_err_2,y_err_3,y_err_4],
                             xlabel="havaintovirhe", 
                             list_label=["tarkka mittaus (referenssi)", "ei virheenkorjausta", "virheenkorjaus", "virheenkorjaus lisäaskelilla"],
-                            linestyles=["-","--",":",":",],
+                            linestyles=["-","--",":",":"],
                             log_scale=True, 
                             savename="virheenkorjaus",
-                            ylim=(-0.05,1.05))
+ylim=(-0.05,1.05))
+    
+    
+    
+def variate_parameter(iterations=1000, idx__gs_st_er=0):
+    
+    # These all are 10 placeholders long
+    var_len = 10
+    x_ax_gs = np.arange(10,60,5)
+    x_ax_st = np.arange(1,10+1)
+    x_ax_er = np.logspace(-4,0,var_len)
+    
+    def parameters(list_defaults, list_axis, p_idx, v_idx):
+        """
+        list_defaults = [gs, st, er]
+        list_axis = [gss, sts, ers]
+        """
+        if p_idx == 0:
+            return list_axis[0][v_idx], list_defaults[1], list_defaults[2]
+        
+        elif p_idx == 1:
+            return list_defaults[0], list_axis[1][v_idx], list_defaults[2]
+            
+        elif p_idx == 2:
+            return list_defaults[0], list_defaults[1], list_axis[2][v_idx]
+        
+    #for p_idx in range(3):
+    if True:
+        p_idx = idx__gs_st_er
+        
+        res_mat = np.zeros((var_len, iterations, 8), dtype=int) # 8 different values from one simulation
+    
+        dir_base = "calulated_results/compare_algorithms_var_all__itr"+str(iterations)
+        create_directory_if_it_doesnt_exist_already(dir_base)
+        filename = dir_base+"/gs"+str(20)+"_st"+str(10)+"_p"+str(p_idx)+".npz"
+        
+        if not os.path.isfile(filename):
+            for v_idx in range(var_len):    
+                
+                gs, st, er = parameters([20, 10, 0.001], [x_ax_gs, x_ax_st, x_ax_er], p_idx, v_idx)
+                x_axis = [x_ax_gs, x_ax_st, x_ax_er][p_idx]
+
+                log.debug("progress", v_idx+1 ,"/", var_len)
+                num_found_exact, \
+                    num_found_inexact, \
+                    num_found_corrected, \
+                    num_found_corrected_move, \
+                    found_correct_exact, \
+                    found_correct_inexact, \
+                    found_correct_corrected, \
+                    found_correct_corrected_move, \
+                    required_moves \
+                                = run_MC_4(gs, st, iterations, error=er)
+                
+                res_mat[v_idx,:,:] = np.vstack((num_found_exact, \
+                                                num_found_inexact, \
+                                                num_found_corrected, \
+                                                num_found_corrected_move, \
+                                                found_correct_exact, \
+                                                found_correct_inexact, \
+                                                found_correct_corrected, \
+                                                found_correct_corrected_move)).T
+            log.debug("Done!")
+            np.savez(filename, x_axis=x_axis, res_mat=res_mat)
+        
+        else:
+            npzfile = np.load(filename)
+            res_mat = npzfile['res_mat']
+            x_axis = npzfile['x_axis']
+
+    return x_axis, res_mat
+    
+    
+def compare_algoithms_steps(iterations=1000):
+    x_axis, res_mat = variate_parameter(iterations=iterations, idx__gs_st_er=1)
+    
+    num_found_mean = np.mean(res_mat[:,:,1],axis=1)
+    
+    confmat = extract_confmat(res_mat)
+    
+    mean = np.mean(confmat, axis=1)
+    err = np.std(confmat, axis=1) / np.sqrt(iterations)
+    
+    TRP, TNR, ACC = extract_TPR_TNR_ACC(confmat)
+    
+    
+    # 
+    plotter.plot_multiple(x_axis, [TRP[:,0], TRP[:,1], TRP[:,2]], xlabel="askelten lukumäärä", 
+                          list_label=["ei virheenkorjausta", "vihreenkorjaus", "virheenkorjaus lisäaskelilla"], 
+                          log_scale=False, linestyles=["--","-.",":"],
+                          savename="compare_algs_var_st_TRP", ylim=None)
+    
+    plotter.plot_multiple(x_axis, [TNR[:,0], TNR[:,1], TNR[:,2]], xlabel="askelten lukumäärä", 
+                          list_label=["ei virheenkorjausta", "vihreenkorjaus", "virheenkorjaus lisäaskelilla"], 
+                          log_scale=False, linestyles=["--","-.",":"],
+                          savename="compare_algs_var_st_TNR", ylim=None)
+    
+    plotter.plot_multiple(x_axis, [ACC[:,0], ACC[:,1], ACC[:,2]], xlabel="askelten lukumäärä", 
+                          list_label=["ei virheenkorjausta", "vihreenkorjaus", "virheenkorjaus lisäaskelilla"], 
+                          log_scale=False, linestyles=["--","-.",":"],
+                          savename="compare_algs_var_st_ACC", ylim=None)
+    
+    
+def compare_algoithms_map(iterations=1000):
+    x_axis, res_mat = variate_parameter(iterations=iterations, idx__gs_st_er=0)
+    
+    num_found_mean = np.mean(res_mat[:,:,1],axis=1)
+    
+    confmat = extract_confmat(res_mat)
+    
+    mean = np.mean(confmat, axis=1)
+    err = np.std(confmat, axis=1) / np.sqrt(iterations)
+    
+    TRP, TNR, ACC = extract_TPR_TNR_ACC(confmat)
+    
+    
+    # 
+    plotter.plot_multiple(x_axis, [TRP[:,0], TRP[:,1], TRP[:,2]], xlabel="kartan koko", 
+                          list_label=["ei virheenkorjausta", "vihreenkorjaus", "virheenkorjaus lisäaskelilla"], 
+                          log_scale=False, linestyles=["--","-.",":"],
+                          savename="compare_algs_var_gs_TRP", ylim=None)
+    
+    plotter.plot_multiple(x_axis, [TNR[:,0], TNR[:,1], TNR[:,2]], xlabel="kartan koko", 
+                          list_label=["ei virheenkorjausta", "vihreenkorjaus", "virheenkorjaus lisäaskelilla"], 
+                          log_scale=False, linestyles=["--","-.",":"],
+                          savename="compare_algs_var_gs_TNR", ylim=None)
+    
+    plotter.plot_multiple(x_axis, [ACC[:,0], ACC[:,1], ACC[:,2]], xlabel="kartan koko", 
+                          list_label=["ei virheenkorjausta", "vihreenkorjaus", "virheenkorjaus lisäaskelilla"], 
+                          log_scale=False, linestyles=["--","-.",":"],
+                          savename="compare_algs_var_gs_ACC", ylim=None)
+    
+def compare_algoithms_error(iterations=1000):
+    x_axis, res_mat = variate_parameter(iterations=iterations, idx__gs_st_er=2)
+    
+    num_found_mean = np.mean(res_mat[:,:,1],axis=1)
+    
+    confmat = extract_confmat(res_mat)
+    
+    mean = np.mean(confmat, axis=1)
+    err = np.std(confmat, axis=1) / np.sqrt(iterations)
+    
+    TRP, TNR, ACC = extract_TPR_TNR_ACC(confmat)
+    
+    
+    # 
+    plotter.plot_multiple(x_axis, [TRP[:,0], TRP[:,1], TRP[:,2]], xlabel="mittausvirhe", 
+                          list_label=["ei virheenkorjausta", "vihreenkorjaus", "virheenkorjaus lisäaskelilla"], 
+                          log_scale=True, linestyles=["--","-.",":"],
+                          savename="compare_algs_var_er_TRP", ylim=None)
+    
+    plotter.plot_multiple(x_axis, [TNR[:,0], TNR[:,1], TNR[:,2]], xlabel="mittausvirhe", 
+                          list_label=["ei virheenkorjausta", "vihreenkorjaus", "virheenkorjaus lisäaskelilla"], 
+                          log_scale=True, linestyles=["--","-.",":"],
+                          savename="compare_algs_var_er_TNR", ylim=None)
+    
+    plotter.plot_multiple(x_axis, [ACC[:,0], ACC[:,1], ACC[:,2]], xlabel="mittausvirhe", 
+                          list_label=["ei virheenkorjausta", "vihreenkorjaus", "virheenkorjaus lisäaskelilla"], 
+                          log_scale=True, linestyles=["--","-.",":"],
+                          savename="compare_algs_var_er_ACC", ylim=None)
+    
 
 
+def extract_confmat(res_mat):
+    """
+    This function caluclates error specifity values from pre-calulated all-in-one matrix.
+    """
     
+    var_len =  res_mat.shape[0]
+    N = res_mat.shape[1]
+    confmat = np.zeros((var_len,N,3,2,2), dtype=int)
+
     
+    for v in range(var_len):
+        for i in range(N):
+            for j, name in enumerate(['inexact', 'corrected', 'moved']):
+                found_exact = res_mat[v,i,0]
+                found_err = res_mat[v,i,1+j]
+                
+                true_pos = 0
+                true_neg = 0
+                false_pos = 0
+                false_neg = 0
+                            
+                if (found_exact == 1) and (found_err == 1):
+                    true_pos = 1
+                elif (found_exact != 1) and (found_err != 1):
+                    true_neg = 1
+                elif (found_exact == 1) and (found_err != 1):
+                    false_neg = 1
+                elif (found_exact != 1) and (found_err == 1):
+                    false_pos = 1
+                
+            
+                confusion_mat = np.array(((true_pos, false_neg), (false_pos, true_neg)), dtype=int)
+                confmat[v,i,j,:,:] = confusion_mat
     
+    return confmat
+
+def extract_TPR_TNR_ACC(confmat):
+    sums = np.sum(confmat, axis=1)
+    TRP = sums[:,:,0,0] / (sums[:,:,0,0] + sums[:,:,0,1])  # TP / (TP+FN)
+    TNR = sums[:,:,1,1] / (sums[:,:,1,1] + sums[:,:,1,0])  # TN / (TN+FP)
+    ACC = sums[:,:,0,0] / (sums[:,:,0,0] + sums[:,:,0,1] + sums[:,:,1,1] + sums[:,:,1,0])
+
+    
+    return TRP, TNR, ACC
+
 def create_directory_if_it_doesnt_exist_already(directory:str):
     if not os.path.exists(directory):
         os.makedirs(directory)

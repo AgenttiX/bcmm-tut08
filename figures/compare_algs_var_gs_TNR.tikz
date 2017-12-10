@@ -1,0 +1,65 @@
+% This file was created by matplotlib2tikz v0.6.14.
+\begin{tikzpicture}
+
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+
+\begin{axis}[
+xlabel={kartan koko},
+ylabel={P},
+xmin=7.75, xmax=57.25,
+ymin=1.81098838160694, ymax=15.4950171821306,
+tick align=outside,
+tick pos=left,
+x grid style={white!69.019607843137251!black},
+y grid style={white!69.019607843137251!black},
+legend cell align={left},
+legend entries={{ei virheenkorjausta},{vihreenkorjaus},{virheenkorjaus lisäaskelilla}},
+legend style={draw=white!80.0!black}
+]
+\addlegendimage{no markers, color0}
+\addlegendimage{no markers, color1}
+\addlegendimage{no markers, color2}
+\addplot [semithick, color0, dashed]
+table {%
+10 14.7619047619048
+15 10.448275862069
+20 8.94
+25 6.944
+30 4.80701754385965
+35 4.37837837837838
+40 3.4375
+45 2.984
+50 2.72284644194757
+55 2.43298969072165
+};
+\addplot [semithick, color1, dash pattern=on 1pt off 3pt on 3pt off 3pt]
+table {%
+10 14.8730158730159
+15 10.4942528735632
+20 8.99
+25 6.992
+30 4.84795321637427
+35 4.4
+40 3.46428571428571
+45 2.996
+50 2.73782771535581
+55 2.43642611683849
+};
+\addplot [semithick, color2, dotted]
+table {%
+10 14.8730158730159
+15 10.4942528735632
+20 9
+25 7
+30 4.84795321637427
+35 4.40540540540541
+40 3.46428571428571
+45 2.996
+50 2.74531835205992
+55 2.43642611683849
+};
+\end{axis}
+
+\end{tikzpicture}

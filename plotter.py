@@ -421,8 +421,9 @@ def plot_one(x_axis, dat, xlabel="", ylim=None, log_scale=False, savename=None):
     tikz_save("figures/" + savename + 'tikz')
     enable_print()
 
-def plot_multiple(x_axis, list_y, xlabel="", list_label=[], log_scale=False, savename=None, ylim=None):
-    fig = plt.figure(xlabel+" TPR, TNR, ACC")
+def plot_multiple(x_axis, list_y, xlabel="", list_label=[], linestyles=[], 
+                  log_scale=False, savename=None, ylim=None):
+    fig = plt.figure(xlabel+str(savename))
     if log_scale:
         fig.gca().set_xscale("log", nonposx='clip')
         
@@ -431,8 +432,13 @@ def plot_multiple(x_axis, list_y, xlabel="", list_label=[], log_scale=False, sav
     else:
         list_label_0 = list_label
     
+    if len(linestyles) == 0:
+        linestyles_0 = ["-" for i in range(len(list_y))]
+    else:
+        linestyles_0 = linestyles
+    
     for i, y in enumerate(list_y):
-        plt.plot(x_axis, y, label=list_label_0[i])
+        plt.plot(x_axis, y, label=list_label_0[i], linestyle=linestyles_0[i])
 
     
     plt.xlabel(xlabel)
@@ -442,9 +448,10 @@ def plot_multiple(x_axis, list_y, xlabel="", list_label=[], log_scale=False, sav
     if len(list_label) > 0:
         plt.legend()
     
-    block_print()
-    tikz_save("figures/" + savename + 'tikz')
-    enable_print()
+    if savename is not None:
+        block_print()
+        tikz_save("figures/" + savename + '.tikz')
+        enable_print()
 
 
 def plot_multiple_errorbar(x_axis, 
