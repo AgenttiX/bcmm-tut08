@@ -383,7 +383,7 @@ def plot_conf_mat(x_axis, mat, xlabel="", ylim=None, log_scale=False):
         fig_incorr.savefig(save_name_incorr + '.pgf')
 
 
-def plot_TPR_TNR_ACC(x_axis, TPR, TNR, AAC, xlabel="", ylim=None, log_scale=False):
+def plot_TPR_TNR_ACC(x_axis, TPR, TNR, ACC, xlabel="", ylim=None, log_scale=False):
     
     fig = plt.figure(xlabel+" TPR, TNR, AAC")
     if log_scale:
@@ -391,7 +391,7 @@ def plot_TPR_TNR_ACC(x_axis, TPR, TNR, AAC, xlabel="", ylim=None, log_scale=Fals
         
     plt.plot(x_axis, TPR, label="TPR")
     plt.plot(x_axis, TNR, label="TNR")
-    plt.plot(x_axis, AAC, label="AAC")
+    plt.plot(x_axis, ACC, label="ACC")
     
     plt.xlabel(xlabel)
     plt.ylabel("P")
@@ -404,7 +404,95 @@ def plot_TPR_TNR_ACC(x_axis, TPR, TNR, AAC, xlabel="", ylim=None, log_scale=Fals
     enable_print()
     
     
-        
+def plot_one(x_axis, dat, xlabel="", ylim=None, log_scale=False, savename=None):
     
+    fig = plt.figure(xlabel+" TPR, TNR, ACC")
+    if log_scale:
+        fig.gca().set_xscale("log", nonposx='clip')
+        
+    plt.plot(x_axis, dat)
+
+    
+    plt.xlabel(xlabel)
+    plt.ylabel("P")
+    plt.ylim(ylim)
+    
+    block_print()
+    tikz_save("figures/" + savename + 'tikz')
+    enable_print()
+
+def plot_multiple(x_axis, list_y, xlabel="", list_label=[], log_scale=False, savename=None, ylim=None):
+    fig = plt.figure(xlabel+" TPR, TNR, ACC")
+    if log_scale:
+        fig.gca().set_xscale("log", nonposx='clip')
+        
+    if len(list_label) == 0:
+        list_label_0 = ["" for i in range(len(list_y))]
+    else:
+        list_label_0 = list_label
+    
+    for i, y in enumerate(list_y):
+        plt.plot(x_axis, y, label=list_label_0[i])
+
+    
+    plt.xlabel(xlabel)
+    plt.ylabel("P")
+    plt.ylim(ylim)
+    
+    if len(list_label) > 0:
+        plt.legend()
+    
+    block_print()
+    tikz_save("figures/" + savename + 'tikz')
+    enable_print()
+
+
+def plot_multiple_errorbar(x_axis, 
+                           list_y, 
+                           list_yerr, 
+                           xlabel="", 
+                           list_label=[], 
+                           log_scale=False, 
+                           savename=None, 
+                           ylim=None,
+                           linestyles=[]):
+    fig = plt.figure(xlabel+" "+ savename)
+    if log_scale:
+        fig.gca().set_xscale("log", nonposx='clip')
+        
+    if len(list_label) == 0:
+        list_label_0 = ["" for i in range(len(list_y))]
+    else:
+        list_label_0 = list_label
+    
+    if len(linestyles) == 0:
+        linestyles_0 = ["-" for i in range(len(list_y))]
+    else:
+        linestyles_0 = linestyles
+    
+    
+    for i, y in enumerate(list_y):
+        plt.errorbar(x_axis, y, yerr=list_yerr[i], capsize=4, label=list_label_0[i], linestyle=linestyles_0[i])
+
+    
+    plt.xlabel(xlabel)
+    plt.ylabel("P")
+    plt.ylim(ylim)
+    
+    if True:
+        block_print()
+        tikz_save("figures/" + savename + '.tikz')
+        enable_print()
+        
+        if len(list_label) > 0:
+            plt.legend()
+                         
+        add_label = fix_labels_in_tikz(*list_label)
+        write_lines("figures/" + savename + '.tikz', "y grid style", add_label)
+
+    else:
+        if len(list_label) > 0:
+            plt.legend()    
+        plt.savefig("figures/" + savename + '.pgf')
     
     

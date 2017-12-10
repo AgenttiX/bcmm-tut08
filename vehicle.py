@@ -14,7 +14,7 @@ class Vehicle:
     A vehicle that moves on a map
     """
 
-    def __init__(self, map_grid: np.ndarray, max_history=10, start_direction=None):
+    def __init__(self, map_grid: np.ndarray, max_history=10, start_direction=None, error: float=0.001):
         self.__map = map_grid
         self.__max_history = max_history
 
@@ -22,6 +22,7 @@ class Vehicle:
         self.__x = np.random.randint(low=0, high=self.__map.shape[1] - 1)
         self.__rel_y = 0
         self.__rel_x = 0
+        self.error = error
 
         if start_direction is None:
             self.__direction = direction.Direction(np.random.randint(low=0, high=3))
@@ -62,18 +63,16 @@ class Vehicle:
         :return:
         """
         return color.Color(self.__map[self.__y, self.__x])
-
-    @staticmethod
-    def change_measurement(measurement: typing.Union[int, color.Color]) -> color.Color:
+    
+    #@staticmethod
+    def change_measurement(self, measurement: typing.Union[int, color.Color]) -> color.Color:
         """
-        Change the given value with the probability of 0.001
+        Change the given value with the probability of 'self.error'
         :param measurement: color value
         :return: color value
         """
-        # Two numbers are used to ensure that the result is truly random
-        random_int1 = np.random.randint(1000)
-        random_int2 = np.random.randint(1000)
-        if random_int1 == random_int2:
+
+        if np.random.random() < self.error:
             color_change = np.random.randint(1, 4)
             result = (measurement + color_change) % 4
         else:

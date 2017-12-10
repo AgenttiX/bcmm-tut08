@@ -1,3 +1,6 @@
+"""
+This file contains all Monte Carlo simulation calculation functions.
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -178,7 +181,7 @@ def calc_confusion_mat(gridsize=-1, steps=10, iterations=1000, dirname="Unnamed"
         elif steps == -1:
             x_axis = np.arange(1,10+1)
         elif var_error:
-            x_axis = np.logspace(-4,-1,10)
+            x_axis = np.logspace(-4,0,10)
         else:
             raise Exception("You have to variate gridsize or steps, set that value to -1 to do that")
         
@@ -208,9 +211,9 @@ def calc_TPR_TNR_ACC(res_vec, iterations):
     TPR = TP / (TP+FN)
     # SPC is it same as TNR?
     TNR = TN / (TN + FP)
-    AAC = (TP + TN) / (TP + FN + TN + FP)
+    ACC = (TP + TN) / (TP + FN + TN + FP)
 
-    return TPR, TNR, AAC
+    return TPR, TNR, ACC
 
 
 
@@ -286,9 +289,9 @@ def single_four_table(iterations=1000):
     TPR = TP / (TP+FN)
     # SPC is it same as TNR?
     TNR = TN / (TN + FP)
-    AAC = (TP + TN) / (TP + FN + TN + FP)
+    ACC = (TP + TN) / (TP + FN + TN + FP)
     
-    print("TPR", TPR, "TNR", TNR, "AAC", AAC)
+    print("TPR", TPR, "TNR", TNR, "ACC", ACC)
     
     # TP_mean = mat[0,0,0]
     # FN_mean = mat[0,1,0]
